@@ -508,7 +508,7 @@ button.is-loading > span {
   );
   background-size: 200%;
   border-radius: 2px;
-  display: block;
+  /* display: block; */
   height: var(--loading-line-height);
 }
 
