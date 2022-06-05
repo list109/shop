@@ -4,7 +4,7 @@
     "es6": true,
     "jest": true
   },
-  "extends": "eslint:recommended",
+  "extends": ["eslint:recommended", "prettier"],
   "parserOptions": {
     "ecmaVersion": 2020,
     "sourceType": "module"
@@ -15,13 +15,13 @@
     "no-dupe-args": "warn",
     "no-duplicate-case": "warn",
     "no-empty": "warn",
-    "no-extra-semi": "warn",
+    // "no-extra-semi": "warn",
     "no-func-assign": "warn",
     "no-obj-calls": "warn",
     "no-sparse-arrays": "warn",
     "no-unreachable": "warn",
     "valid-typeof": "warn",
-    "no-multi-spaces": "warn",
+    // "no-multi-spaces": "warn",
     "no-with": "warn",
     "curly": "warn",
     "no-unused-expressions": "warn",
@@ -29,35 +29,45 @@
     "no-undefined": "off",
     "camelcase": "warn",
 
-    "indent": ["warn", 2, {
-      "MemberExpression": "off"
-    }],
+    // "indent": [
+    //   "warn",
+    //   2,
+    //   {
+    //     "MemberExpression": "off"
+    //   }
+    // ],
 
-    "array-bracket-spacing": ["warn", "never"],
-    "comma-spacing": "warn",
-    "comma-style": "warn",
-    "computed-property-spacing": "warn",
-    "func-call-spacing": "warn",
-    "key-spacing": "warn",
-    "keyword-spacing": "warn",
+    // "array-bracket-spacing": ["warn", "never"],
+    // "comma-spacing": "warn",
+    // "comma-style": "warn",
+    // "computed-property-spacing": "warn",
+    // "func-call-spacing": "warn",
+    // "key-spacing": "warn",
+    // "keyword-spacing": "warn",
     "new-cap": "warn",
-    "no-mixed-spaces-and-tabs": "warn",
-    "one-var": ["warn", {
-      "var": "never",
-      "let": "never",
-      "const": "never"
-    }],
-    "semi": "warn",
-    "space-in-parens": ["warn", "never"],
-    "space-before-blocks": "warn",
-    "unicode-bom": "warn",
-    "new-parens": "warn",
+    // "no-mixed-spaces-and-tabs": "warn",
+    "one-var": [
+      "warn",
+      {
+        "var": "never",
+        "let": "never",
+        "const": "never"
+      }
+    ],
+    // "semi": "warn",
+    // "space-in-parens": ["warn", "never"],
+    // "space-before-blocks": "warn",
+    // "unicode-bom": "warn",
+    // "new-parens": "warn",
     "no-nested-ternary": "warn",
-    "space-infix-ops": "warn",
-    "space-unary-ops": ["warn", {
-      "words": true,
-      "nonwords": false
-    }],
+    // "space-infix-ops": "warn",
+    // "space-unary-ops": [
+    //   "warn",
+    //   {
+    //     "words": true,
+    //     "nonwords": false
+    //   }
+    // ],
 
     // ES2015
     "constructor-super": "warn",
