@@ -8,7 +8,7 @@ const header = [
           <div class="sortable-table__cell">
             <img class="sortable-table-image" alt="Image" src="${data[0].url}">
           </div>
-        `;
+        `
     }
   },
   {
@@ -37,9 +37,9 @@ const header = [
     template: data => {
       return `<div class="sortable-table__cell">
           ${data > 0 ? 'Active' : 'Inactive'}
-        </div>`;
+        </div>`
     }
-  },
-];
+  }
+]
 
-export default header;
+export default header

@@ -1,18 +1,18 @@
 export default class Page {
-  element;
-  subElements = {};
-  components = {};
+  element
+  subElements = {}
+  components = {}
 
   async render() {
-    const element = document.createElement('div');
+    const element = document.createElement('div')
 
     element.innerHTML = `
       <div>
         <h1>Edit page</h1>
-      </div>`;
+      </div>`
 
-    this.element = element.firstElementChild;
+    this.element = element.firstElementChild
 
-    return this.element;
+    return this.element
   }
 }

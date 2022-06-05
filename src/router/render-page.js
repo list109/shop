@@ -1,18 +1,20 @@
-export default async function(path, match) {
-  const main = document.querySelector('main');
+export default async function (path, match) {
+  const main = document.querySelector('main')
 
-  main.classList.add('is-loading');
+  main.classList.add('is-loading')
 
-  const { default: Page } = await import(/* webpackChunkName: "[request]" */`../pages/${path}/index.js`);
-  const page = new Page();
-  const element = await page.render();
+  const { default: Page } = await import(
+    /* webpackChunkName: "[request]" */ `../pages/${path}/index.js`
+  )
+  const page = new Page()
+  const element = await page.render()
 
-  main.classList.remove('is-loading');
+  main.classList.remove('is-loading')
 
-  const contentNode = document.querySelector('#content');
+  const contentNode = document.querySelector('#content')
 
-  contentNode.innerHTML = '';
-  contentNode.append(element);
+  contentNode.innerHTML = ''
+  contentNode.append(element)
 
-  return page;
+  return page
 }
