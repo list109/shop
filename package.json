@@ -9,8 +9,9 @@
     "build": "npm run clean && cross-env NODE_ENV=production webpack --config ./webpack/webpack.prod.js",
     "eslint": "eslint \"src/**/*.js\"",
     "eslint:fix": "npm run eslint -- --fix",
+    "eslint:test": "eslint \"src/**/*.{spec,test}.js\"",
     "prettier": "prettier --check \"src/**/*.{js,css,html,md,json}\" --write",
-    "test:jest": "cross-env NODE_ICU_DATA=node_modules/full-icu jest",
+    "test:jest": "npm run eslint:test && cross-env NODE_ICU_DATA=node_modules/full-icu jest",
     "static-server": "static-server ./build",
     "clean": "rimraf build"
   },
