@@ -73,5 +73,17 @@
     "constructor-super": "warn",
     "no-this-before-super": "warn",
     "no-var": "warn"
-  }
+  },
+  "plugins": ["testing-library", "jest", "jest-dom"],
+  "overrides": [
+    {
+      "env": { "jest": true },
+      "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+      "extends": [
+        "plugin:jest/recommended",
+        "plugin:jest-dom/recommended",
+        "plugin:testing-library/react"
+      ]
+    }
+  ]
 }
