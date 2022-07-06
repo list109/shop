@@ -1,13 +1,5 @@
 import RangePicker from './index.js'
-import {
-  getByRole,
-  getByText,
-  getByTestId,
-  prettyDOM,
-  screen,
-  getAllByRole,
-  logRoles
-} from '@testing-library/react'
+import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 
 const getDaysBetweenDates = (from, to) => {
@@ -36,23 +28,24 @@ function getRangePicker({ from, to } = {}) {
   }
 }
 
-function getRangeCells(from, to) {}
-
 describe('RangePicker', () => {
   it('should initially show only input', () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
+    rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const selector = screen.getByRole('dialog')
 
     expect(input).toBeInstanceOf(HTMLElement)
     expect(selector).toBeEmptyDOMElement()
+
+    rangePicker.clear()
   })
 
   it('should be opened on click', async () => {
     const rangePicker = getRangePicker()
     rangePicker.render()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
+    const input = screen.getByRole('combobox', { expanded: false })
+    const selector = screen.getByRole('dialog')
     const user = userEvent.setup()
 
     await user.click(input)
@@ -66,22 +59,23 @@ describe('RangePicker', () => {
 
   it('should be closed on second click', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
+    rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
     const user = userEvent.setup()
 
     await user.click(input)
     await user.click(input)
 
     expect(input).toHaveAttribute('aria-expanded', expect.stringMatching('false'))
+
+    rangePicker.clear()
   })
 
   it('should be closed wherever a date range is chosen', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox')
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox')
+    const user = userEvent.setup()
 
     expect(input).toHaveAttribute('aria-expanded', 'false')
 
@@ -89,9 +83,9 @@ describe('RangePicker', () => {
 
     expect(input).toHaveAttribute('aria-expanded', 'true')
 
-    const month1 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
-    const firstDate = getByRole(month1, 'gridcell', { name: '1' })
-    const secondDate = getByRole(month1, 'gridcell', { name: '15' })
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const firstDate = within(month1).getByRole('gridcell', { name: '1' })
+    const secondDate = within(month1).getByRole('gridcell', { name: '15' })
 
     await user.click(firstDate)
     await user.click(secondDate)
@@ -104,9 +98,8 @@ describe('RangePicker', () => {
   it("should show selected dates 'dateFrom-dateTo' in input", () => {
     const rangePicker = getRangePicker()
     rangePicker.render()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const dateFrom = getByText(input, '02.10.2019')
-    const dateTo = getByText(input, '05.11.2019')
+    const dateFrom = screen.getByText('02.10.2019')
+    const dateTo = screen.getByText('05.11.2019')
 
     expect(dateFrom).toBeInTheDocument()
     expect(dateTo).toBeInTheDocument()
@@ -119,17 +112,19 @@ describe('RangePicker', () => {
       from: new Date(2019, 9, 12),
       to: new Date(2019, 10, 25)
     })
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
+    rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
     const user = userEvent.setup()
 
     await user.click(input)
 
-    const from = getByTestId(selector, /from selected/i)
-    const to = getByTestId(selector, 'to selected')
+    const from = screen.getByTestId(/from selected/i)
+    const to = screen.getByTestId(/to selected/i)
 
     expect(from).toHaveTextContent('12')
     expect(to).toHaveTextContent('25')
+
+    rangePicker.clear()
   })
 
   it('should highlight selected dates range in calendar', async () => {
@@ -138,68 +133,73 @@ describe('RangePicker', () => {
     const totalDays = getDaysBetweenDates(from, to)
     const RANGE_BORDERS_COUNT = 2
     const rangePicker = getRangePicker({ from, to })
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
+    rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
     const user = userEvent.setup()
 
     await user.click(input)
 
-    const selectedBetween = getAllByRole(selector, 'strong').slice(1, -1)
+    const selectedBetween = screen.getAllByRole('strong').slice(1, -1)
 
     expect(selectedBetween).toHaveLength(totalDays - RANGE_BORDERS_COUNT)
+
+    rangePicker.clear()
   })
 
   it('should clear highlighting of previous selection', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
+    rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
     const user = userEvent.setup()
 
     await user.click(input)
 
-    const from = getByTestId(selector, /from selected/i)
-    const prevDate = from.previousElementSibling
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const someDate = within(month1).getByRole('gridcell', { name: '1' })
 
-    await user.click(prevDate)
+    await user.click(someDate)
 
-    const selectedBetween = getAllByRole(selector, 'strong').slice(1, -1)
+    const selectedBetween = screen.getAllByRole('strong').slice(1, -1)
 
     expect(selectedBetween).toHaveLength(0)
+
+    rangePicker.clear()
   })
 
   it('should keep selected dates range after reopening', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
+    rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
     const user = userEvent.setup()
 
     // open date picker
     await user.click(input)
 
-    const from = getByTestId(selector, /from selected/i)
-    const prevDate = from.previousElementSibling
-    const nextDate = from.nextElementSibling
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const prevDate = within(month1).getByRole('gridcell', { name: '1' })
+    const nextDate = within(month1).getByRole('gridcell', { name: '3' })
 
     await user.click(prevDate)
     await user.click(nextDate)
 
-    expect(getByTestId(selector, /from selected/i)).toHaveTextContent('1')
-    expect(getByTestId(selector, 'to selected')).toHaveTextContent('3')
+    expect(screen.getByTestId(/from selected/i)).toHaveTextContent('1')
+    expect(screen.getByTestId(/to selected/i)).toHaveTextContent('3')
+
+    rangePicker.clear()
   })
 
   it('should show correct initial months in calendar', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
+    rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
     const user = userEvent.setup()
 
-    rangePicker.render()
     // open date picker
     await user.click(input)
 
-    const months = getAllByRole(selector, 'grid')
-    const month1 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
-    const month2 = getByRole(selector, 'grid', { name: /^Ноябрь$/i })
+    const months = screen.getAllByRole('grid')
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month2 = screen.getByRole('grid', { name: /^Ноябрь$/i })
 
     expect(months).toHaveLength(2)
     expect(month1).toBeInTheDocument()
@@ -210,20 +210,20 @@ describe('RangePicker', () => {
 
   it('should have ability to switch to the next couple of months', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const user = userEvent.setup()
+
     // open date picker
     await user.click(input)
 
-    const prevMonthButton = getByRole(selector, 'button', { name: /next month/i })
+    const prevMonthButton = screen.getByRole('button', { name: /next month/i })
 
     await user.click(prevMonthButton)
 
-    const months = getAllByRole(selector, 'grid')
-    const month2 = getByRole(selector, 'grid', { name: /^Ноябрь$/i })
-    const month1 = getByRole(selector, 'grid', { name: /^Декабрь$/i })
+    const months = screen.getAllByRole('grid')
+    const month2 = screen.getByRole('grid', { name: /^Ноябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^Декабрь$/i })
 
     expect(months).toHaveLength(2)
     expect(month1).toBeInTheDocument()
@@ -234,20 +234,20 @@ describe('RangePicker', () => {
 
   it('should have ability to switch to the previous couple of months', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const user = userEvent.setup()
+
     // open date picker
     await user.click(input)
 
-    const prevMonthButton = getByRole(selector, 'button', { name: 'previous month' })
+    const prevMonthButton = screen.getByRole('button', { name: 'previous month' })
 
     await user.click(prevMonthButton)
 
-    const months = getAllByRole(selector, 'grid')
-    const month1 = getByRole(selector, 'grid', { name: /^Сентябрь$/i })
-    const month2 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
+    const months = screen.getAllByRole('grid')
+    const month1 = screen.getByRole('grid', { name: /^Сентябрь$/i })
+    const month2 = screen.getByRole('grid', { name: /^Октябрь$/i })
 
     expect(months).toHaveLength(2)
     expect(month1).toBeInTheDocument()
@@ -258,18 +258,18 @@ describe('RangePicker', () => {
 
   it('should have ability to select all dates in two visible months', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const user = userEvent.setup()
+
     // open date picker
     await user.click(input)
-    getByRole(rangePicker.element, 'combobox', { expanded: true })
+    screen.getByRole('combobox', { expanded: true })
 
-    const month1 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
-    const month2 = getByRole(selector, 'grid', { name: /^Ноябрь$/i })
-    const firstDate = getByRole(month1, 'gridcell', { name: '1' })
-    const secondDate = getByRole(month2, 'gridcell', { name: '30' })
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month2 = screen.getByRole('grid', { name: /^Ноябрь$/i })
+    const firstDate = within(month1).getByRole('gridcell', { name: '1' })
+    const secondDate = within(month2).getByRole('gridcell', { name: '30' })
 
     // choose border dates
     await user.click(firstDate)
@@ -277,10 +277,10 @@ describe('RangePicker', () => {
 
     expect(input).toHaveAttribute('aria-expanded', 'false')
 
-    let highlighted = getAllByRole(selector, 'strong')
+    let highlighted = screen.getAllByRole('strong')
     // change "from" and "to" dates
-    let from = getByTestId(selector, /from selected/i)
-    let to = getByTestId(selector, 'to selected')
+    let from = screen.getByTestId(/from selected/i)
+    let to = screen.getByTestId(/to selected/i)
 
     expect(from).toHaveTextContent('1')
     expect(to).toHaveTextContent('30')
@@ -290,8 +290,8 @@ describe('RangePicker', () => {
     await user.click(input)
     expect(input).toHaveAttribute('aria-expanded', 'true')
 
-    from = getByTestId(selector, /from selected/i)
-    to = getByTestId(selector, 'to selected')
+    from = screen.getByTestId(/from selected/i)
+    to = screen.getByTestId(/to selected/i)
 
     // check selection after second opening
     expect(highlighted).toHaveLength(61)
@@ -303,26 +303,25 @@ describe('RangePicker', () => {
 
   it('should have ability to select dates range bigger than two months', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const user = userEvent.setup()
 
     // open date picker
     await user.click(input)
 
-    const month1 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
-    const firstDate = getByRole(month1, 'gridcell', { name: '1' })
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const firstDate = within(month1).getByRole('gridcell', { name: '1' })
 
     // change "from" date
     await user.click(firstDate)
 
     // got to the next couple of months
-    const nextMonthButton = getByRole(selector, 'button', { name: 'next month' })
+    const nextMonthButton = screen.getByRole('button', { name: 'next month' })
     await user.click(nextMonthButton)
 
-    const month2 = getByRole(selector, 'grid', { name: /^Декабрь$/i })
-    const secondDate = getByRole(month2, 'gridcell', { name: '31' })
+    const month2 = screen.getByRole('grid', { name: /^Декабрь$/i })
+    const secondDate = within(month2).getByRole('gridcell', { name: '31' })
     // change "to" date
     await user.click(secondDate)
 
@@ -334,16 +333,15 @@ describe('RangePicker', () => {
 
   it("should not change dates 'from' and 'to' inside input element if selected only one date", async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const user = userEvent.setup()
 
     // open date picker
     await user.click(input)
 
-    const month1 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
-    const firstDate = getByRole(month1, 'gridcell', { name: '1' })
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const firstDate = within(month1).getByRole('gridcell', { name: '1' })
 
     // change "from" date
     await user.click(firstDate)
@@ -357,22 +355,21 @@ describe('RangePicker', () => {
 
   it('should have ability to select minimal dates range equal two days', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const user = userEvent.setup()
 
     // open date picker
     await user.click(input)
 
-    const month1 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
-    const firstDate = getByRole(month1, 'gridcell', { name: '1' })
-    const secondDate = getByRole(month1, 'gridcell', { name: '2' })
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const firstDate = within(month1).getByRole('gridcell', { name: '1' })
+    const secondDate = within(month1).getByRole('gridcell', { name: '2' })
 
     await user.click(firstDate)
     await user.click(secondDate)
 
-    const highlighted = getAllByRole(month1, 'strong')
+    const highlighted = within(month1).getAllByRole('strong')
 
     expect(highlighted).toHaveLength(2)
 
@@ -387,25 +384,24 @@ describe('RangePicker', () => {
   // TODO: maybe we need fix this behaviour in DateRange component?
   it('should have ability to select minimal dates range equal one day', async () => {
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const user = userEvent.setup()
 
     // open date picker
     await user.click(input)
 
-    const month1 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
-    const firstDate = getByRole(month1, 'gridcell', { name: '1' })
-    const secondDate = getByRole(month1, 'gridcell', { name: '1' })
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const firstDate = within(month1).getByRole('gridcell', { name: '1' })
+    const secondDate = within(month1).getByRole('gridcell', { name: '1' })
 
     // change "from" date to "01.10.2019"
     await user.click(firstDate)
     // change "to" date to "01.10.2019"
     await user.click(secondDate)
 
-    const from = getByTestId(selector, /from selected/i)
-    const to = getByTestId(selector, /to selected/i)
+    const from = screen.getByTestId(/from selected/i)
+    const to = screen.getByTestId(/to selected/i)
 
     expect(from).toBe(to)
 
@@ -419,28 +415,27 @@ describe('RangePicker', () => {
   it('should have ability select more than 1 year dates range', async () => {
     const MONTHS_COUNT = 12
     const rangePicker = getRangePicker()
-    const input = getByRole(rangePicker.element, 'combobox', { expanded: false })
-    const selector = getByRole(rangePicker.element, 'dialog')
-    const user = userEvent.setup()
     rangePicker.render()
+    const input = screen.getByRole('combobox', { expanded: false })
+    const user = userEvent.setup()
 
     // open date picker
     await user.click(input)
 
-    const month1 = getByRole(selector, 'grid', { name: /^Октябрь$/i })
-    const firstDate = getByRole(month1, 'gridcell', { name: '1' })
+    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const firstDate = within(month1).getByRole('gridcell', { name: '1' })
 
     // change "from" date to "01.10.2019"
     await user.click(firstDate)
 
-    const nextMonthButton = getByRole(selector, 'button', { name: 'next month' })
+    const nextMonthButton = screen.getByRole('button', { name: 'next month' })
 
     for (let i = 0; i < MONTHS_COUNT; i++) {
       await user.click(nextMonthButton)
     }
 
-    const month2 = getByRole(selector, 'grid', { name: /^Ноябрь$/i })
-    const secondDate = getByRole(month2, 'gridcell', { name: '1' })
+    const month2 = screen.getByRole('grid', { name: /^Ноябрь$/i })
+    const secondDate = within(month2).getByRole('gridcell', { name: '1' })
     // change "to" date "01.11.2020"
     await user.click(secondDate)
 
