@@ -24,7 +24,7 @@
     // "no-multi-spaces": "warn",
     "no-with": "warn",
     "curly": "warn",
-    "no-unused-expressions": "warn",
+    "no-unused-expressions": ["warn", { "allowTernary": true }],
     "no-shadow-restricted-names": "warn",
     "no-undefined": "off",
     "camelcase": "warn",
