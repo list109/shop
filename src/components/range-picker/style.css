@@ -93,6 +93,12 @@
 
 .rangepicker__cell {
   cursor: pointer;
+
+  /* button style emulation*/
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Arial';
 }
 
 .rangepicker__calendar {
