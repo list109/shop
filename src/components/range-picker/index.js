@@ -77,9 +77,9 @@ export default class RangePicker {
   }
 
   onSelectorClick({ target }) {
-    if (target.classList.contains('rangepicker__cell')) {
-      this.onRangePickerCellClick(target)
-    }
+    const cell = target.closest('.rangepicker__cell')
+    if (cell) this.onRangePickerCellClick(cell)
+  }
   }
 
   close() {
