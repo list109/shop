@@ -125,6 +125,8 @@
   transition: 0.3s all;
   background: url('angle-arrow-icon.svg') left center no-repeat;
   background-size: 9px 13px;
+  border: none;
+  padding: 0px;
 }
 
 .rangepicker__selector-control-left:hover,
