@@ -72,7 +72,11 @@ export default class RangePicker {
   }
 
   toggle() {
-    this.element.classList.toggle('rangepicker_open')
+    this.element.classList.contains('rangepicker_open') ? this.close() : this.open()
+    const { selector } = this.subElements
+
+    if (selector.children.lenght) return
+
     this.renderDateRangePicker()
   }
 
@@ -80,10 +84,15 @@ export default class RangePicker {
     const cell = target.closest('.rangepicker__cell')
     if (cell) this.onRangePickerCellClick(cell)
   }
+
+  open() {
+    this.element.classList.add('rangepicker_open')
+    this.subElements.input.setAttribute('aria-expanded', 'true')
   }
 
   close() {
     this.element.classList.remove('rangepicker_open')
+    this.subElements.input.setAttribute('aria-expanded', 'false')
   }
 
   renderDateRangePicker() {
