@@ -154,12 +154,28 @@ export default class RangePicker {
       cell.classList.remove('rangepicker__selected-between')
       cell.classList.remove('rangepicker__selected-to')
 
+      if (from && to && cellDate > from && cellDate < to) {
+        cell.classList.add('rangepicker__selected-between')
+      }
       if (from && value === from.toISOString()) {
         cell.classList.add('rangepicker__selected-from')
-      } else if (to && value === to.toISOString()) {
+      }
+      if (to && value === to.toISOString()) {
         cell.classList.add('rangepicker__selected-to')
-      } else if (from && to && cellDate >= from && cellDate <= to) {
-        cell.classList.add('rangepicker__selected-between')
+      }
+
+      // aria highlight for tests
+      delete cell.dataset.testid
+      cell.innerHTML = cell.firstElementChild?.innerHTML || cell.textContent
+
+      if (cell.classList.contains('rangepicker__selected-from')) {
+        cell.dataset.testid = 'from selected'
+      }
+      if (cell.classList.contains('rangepicker__selected-to')) {
+        cell.dataset.testid = [cell.dataset.testid, 'to selected'].join(' ').trim()
+      }
+      if (cell.className.match(/rangepicker__selected-[from|to|between]\w+/gi)) {
+        cell.innerHTML = `<span role="strong">${cell.innerHTML}</span>`
       }
     }
 
