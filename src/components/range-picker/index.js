@@ -31,12 +31,26 @@ export default class RangePicker {
     const from = RangePicker.formatDate(this.selected.from)
     const to = RangePicker.formatDate(this.selected.to)
 
-    return `<div class="rangepicker">
-      <div class="rangepicker__input" data-elem="input">
+    return `
+    <div class="rangepicker">
+
+      <div class="rangepicker__input" data-elem="input" tabindex="0"
+      aria-autocomplete="none"
+      role="combobox" 
+      aria-expanded="false" 
+      aria-haspopup="dialog"  
+      aria-controls="range-picker-dialog-1"
+      aria-label="Change The Date Region">
         <span data-elem="from">${from}</span> -
         <span data-elem="to">${to}</span>
       </div>
-      <div class="rangepicker__selector" data-elem="selector"></div>
+
+      <div class="rangepicker__selector" data-elem="selector"
+        id="range-picker-dialog-1"
+        role="dialog" 
+        aria-modal="true" 
+        aria-label="Choose Date"></div>
+
     </div>`
   }
 
@@ -104,8 +118,8 @@ export default class RangePicker {
 
     selector.innerHTML = `
       <div class="rangepicker__selector-arrow"></div>
-      <div class="rangepicker__selector-control-left"></div>
-      <div class="rangepicker__selector-control-right"></div>
+      <button type="button" class="rangepicker__selector-control-left" aria-label="previous month"></button>
+      <button type="button" class="rangepicker__selector-control-right" aria-label="next month"></button>
       ${this.renderCalendar(showDate1)}
       ${this.renderCalendar(showDate2)}
     `
@@ -176,35 +190,50 @@ export default class RangePicker {
     // text-transform: capitalize
     const monthStr = date.toLocaleString('ru', { month: 'long' })
 
-    let table = `<div class="rangepicker__calendar">
-      <div class="rangepicker__month-indicator">
-        <time datetime=${monthStr}>${monthStr}</time>
+    let table = `
+    <div class="rangepicker__calendar" 
+      role="grid" 
+      aria-labelledby="range-picker-caption-${date.getMonth()}">
+
+      <div class="rangepicker__month-indicator" 
+        role="caption" 
+        id="range-picker-caption-${date.getMonth()}">
+
+        <time datetime=${monthStr} aria-live="polite">${monthStr}</time>
       </div>
-      <div class="rangepicker__day-of-week">
-        <div>Пн</div><div>Вт</div><div>Ср</div><div>Чт</div><div>Пт</div><div>Сб</div><div>Вс</div>
+
+      <div class="rangepicker__day-of-week" role="row">
+        <div role="columnheader">Пн</div>
+        <div role="columnheader">Вт</div>
+        <div role="columnheader">Ср</div>
+        <div role="columnheader">Чт</div>
+        <div role="columnheader">Пт</div>
+        <div role="columnheader">Сб</div>
+        <div role="columnheader">Вс</div>
       </div>
-      <div class="rangepicker__date-grid">
+      <div class="rangepicker__date-grid" role="row">
     `
 
     // first day of month starts after a space
     // * * * 1 2 3 4
-    table += `
-      <button type="button"
-        class="rangepicker__cell"
-        data-value="${date.toISOString()}"
-        style="--start-from: ${getGridStartIndex(date.getDay())}">
-          ${date.getDate()}
-      </button>`
+    table += `  
+        <div role="gridcell"
+          class="rangepicker__cell"
+          data-value="${date.toISOString()}"
+          style="--start-from: ${getGridStartIndex(date.getDay())}">
+            ${date.getDate()}
+        </div>
+      `
 
     date.setDate(2)
 
     while (date.getMonth() === showDate.getMonth()) {
       table += `
-        <button type="button"
+        <div role="gridcell"
           class="rangepicker__cell"
           data-value="${date.toISOString()}">
             ${date.getDate()}
-        </button>`
+        </div>`
 
       date.setDate(date.getDate() + 1)
     }
