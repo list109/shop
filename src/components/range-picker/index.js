@@ -89,14 +89,18 @@ export default class RangePicker {
     this.element.classList.contains('rangepicker_open') ? this.close() : this.open()
     const { selector } = this.subElements
 
-    if (selector.children.lenght) return
+    if (selector.children.lenght) {
+      return
+    }
 
     this.renderDateRangePicker()
   }
 
   onSelectorClick({ target }) {
     const cell = target.closest('.rangepicker__cell')
-    if (cell) this.onRangePickerCellClick(cell)
+    if (cell) {
+      this.onRangePickerCellClick(cell)
+    }
   }
 
   open() {
