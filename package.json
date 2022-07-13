@@ -7,13 +7,13 @@
     "start": "npm run build && npm run static-server",
     "develop": "cross-env NODE_ENV=development webpack-dev-server --config ./webpack/webpack.dev.js",
     "build": "npm run clean && cross-env NODE_ENV=production webpack --config ./webpack/webpack.prod.js",
-    "eslint": "eslint \"src/**/*.js\"",
-    "eslint:fix": "npm run eslint -- --fix",
-    "eslint:test": "eslint \"src/**/*.{spec,test}.js\"",
     "prettier": "prettier --check \"src/**/*.{js,css,html,md,json}\" --write",
-    "test:jest": "npm run eslint:test && cross-env NODE_ICU_DATA=node_modules/full-icu jest",
     "static-server": "static-server ./build",
-    "clean": "rimraf build"
+    "clean": "rimraf build",
+    "eslint:fix": "eslint -- --fix",
+    "eslint:test": "eslint \"src/**/*.{spec,test}.js\"",
+    "test": "npm run eslint:test && cross-env NODE_ICU_DATA=node_modules/full-icu jest",
+    "prepare": "husky install"
   },
   "author": "",
   "license": "ISC",
