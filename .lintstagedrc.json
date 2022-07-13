@@ -1,0 +1,6 @@
+{
+  ".*": "prettier --write",
+  "*.!(js)": "prettier --write --ignore-unknown",
+  "!(*.spec|*.test).js": ["eslint", "prettier --write"],
+  "@(*.spec|*.test).js": ["eslint", "prettier --write", "jest"]
+}
