@@ -1,6 +1,7 @@
 import RangePicker from './index.js'
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { prepareForDom } from '../../utils/prepare-for-dom.js'
 
 const getDaysBetweenDates = (from, to) => {
   const millisecondsToDays = ms => ms / (24 * 60 * 60 * 1000)
@@ -9,24 +10,10 @@ const getDaysBetweenDates = (from, to) => {
   return millisecondsToDays(milliseconds)
 }
 
-function getRangePicker({ from, to } = {}) {
-  from ??= new Date(2019, 9, 2)
-  to ??= new Date(2019, 10, 5)
-  let rangePicker = new RangePicker({ from, to })
-
-  return {
-    get element() {
-      return rangePicker.element
-    },
-    render() {
-      document.body.append(rangePicker.element)
-    },
-    clear() {
-      rangePicker.destroy()
-      rangePicker = null
-    }
-  }
-}
+const getRangePicker = prepareForDom(
+  ({ from = new Date(2019, 9, 2), to = new Date(2019, 10, 5) } = {}) =>
+    new RangePicker({ from, to })
+)
 
 describe('RangePicker', () => {
   it('should initially show only input', () => {
