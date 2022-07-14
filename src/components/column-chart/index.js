@@ -6,7 +6,7 @@ export default class ColumnChart {
   chartHeight = 50
   data = []
 
-  calculateValue = data => `${this.valuePrefix}${data.reduce((accum, item) => accum + item, 0)}`
+  calculateValue = data => data.reduce((accum, item) => accum + item, 0)
 
   constructor({
     label = '',
@@ -88,6 +88,8 @@ export default class ColumnChart {
     `
   }
 
+  getOutput = () => `${this.valuePrefix}${this.calculateValue(this.data)}`
+
   getSubElements(element) {
     const elements = element.querySelectorAll('[data-element]')
 
@@ -108,7 +110,7 @@ export default class ColumnChart {
   }
 
   rerender() {
-    this.subElements.header.textContent = this.calculateValue(this.data)
+    this.subElements.header.textContent = this.getOutput()
     this.subElements.body.innerHTML = this.getColumnBody(this.data)
   }
 
