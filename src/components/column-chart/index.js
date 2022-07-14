@@ -26,6 +26,19 @@ export default class ColumnChart {
     this.render()
   }
 
+  async loadData() {
+    this.element.classList.add('column-chart_loading')
+
+    this.url.searchParams.set('from', this.from.toISOString())
+    this.url.searchParams.set('to', this.to.toISOString())
+
+    const data = await fetchJson(this.url)
+
+    this.element.classList.remove('column-chart_loading')
+
+    return data
+  }
+
   getColumnBody(data) {
     const maxValue = Math.max(...data)
 
