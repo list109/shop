@@ -4,6 +4,7 @@ export default class ColumnChart {
   element
   subElements = {}
   chartHeight = 50
+  data = []
 
   calculateValue = data => `${this.valuePrefix}${data.reduce((accum, item) => accum + item, 0)}`
 
