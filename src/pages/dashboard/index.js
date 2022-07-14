@@ -69,18 +69,18 @@ export default class Page {
 
     const ordersChart = new ColumnChart({
       data: ordersData,
-      label: 'orders',
+      label: 'Total orders',
       link: '#'
     })
 
     const salesChart = new ColumnChart({
       data: salesData,
-      label: 'sales'
+      label: 'Total sales'
     })
 
     const customersChart = new ColumnChart({
       data: customersData,
-      label: 'customers'
+      label: 'Total customers'
     })
 
     this.components.sortableTable = sortableTable
