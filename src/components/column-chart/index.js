@@ -1,3 +1,5 @@
+import fetchJson from '../../utils/fetch-json.js'
+
 export default class ColumnChart {
   element
   subElements = {}
