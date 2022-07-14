@@ -10,25 +10,6 @@ export default class Page {
   subElements = {}
   components = {}
 
-  async getDataForColumnCharts(from, to) {
-    const ORDERS = `${
-      process.env.BACKEND_URL
-    }api/dashboard/orders?from=${from.toISOString()}&to=${to.toISOString()}`
-    const SALES = `${
-      process.env.BACKEND_URL
-    }api/dashboard/sales?from=${from.toISOString()}&to=${to.toISOString()}`
-    const CUSTOMERS = `${process.env.BACKEND_URL}api/dashboard/customers?from=${encodeURIComponent(
-      from.toISOString()
-    )}&to=${encodeURIComponent(to.toISOString())}`
-
-    const ordersData = fetchJson(ORDERS)
-    const salesData = fetchJson(SALES)
-    const customersData = fetchJson(CUSTOMERS)
-
-    const data = await Promise.all([ordersData, salesData, customersData])
-    return data.map(item => Object.values(item))
-  }
-
   async updateTableComponent(from, to) {
     const data = await fetchJson(
       `${
@@ -39,23 +20,14 @@ export default class Page {
   }
 
   async updateChartsComponents(from, to) {
-    const [ordersData, salesData, customersData] = await this.getDataForColumnCharts(from, to)
-    const ordersDataTotal = ordersData.reduce((accum, item) => accum + item)
-    const salesDataTotal = salesData.reduce((accum, item) => accum + item)
-    const customersDataTotal = customersData.reduce((accum, item) => accum + item)
-
-    this.components.ordersChart.update({ headerData: ordersDataTotal, bodyData: ordersData })
-    this.components.salesChart.update({ headerData: '$' + salesDataTotal, bodyData: salesData })
-    this.components.customersChart.update({
-      headerData: customersDataTotal,
-      bodyData: customersData
-    })
+    this.components.ordersChart.update({ from, to })
+    this.components.salesChart.update({ from, to })
+    this.components.customersChart.update({ from, to })
   }
 
   async initComponents() {
     const to = new Date()
     const from = new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000)
-    const [ordersData, salesData, customersData] = await this.getDataForColumnCharts(from, to)
 
     const rangePicker = new RangePicker({
       from,
@@ -68,19 +40,26 @@ export default class Page {
     })
 
     const ordersChart = new ColumnChart({
-      data: ordersData,
+      url: `${process.env.BACKEND_URL}api/dashboard/orders`,
       label: 'Total orders',
-      link: '#'
+      link: '#',
+      from,
+      to
     })
 
     const salesChart = new ColumnChart({
-      data: salesData,
-      label: 'Total sales'
+      url: `${process.env.BACKEND_URL}api/dashboard/sales`,
+      label: 'Total sales',
+      valuePrefix: '$ ',
+      from,
+      to
     })
 
     const customersChart = new ColumnChart({
-      data: customersData,
-      label: 'Total customers'
+      url: `${process.env.BACKEND_URL}api/dashboard/customers`,
+      label: 'Total customers',
+      from,
+      to
     })
 
     this.components.sortableTable = sortableTable
