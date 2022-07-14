@@ -98,6 +98,15 @@ export default class ColumnChart {
     }, {})
   }
 
+  async update({ from, to }) {
+    this.from = from
+    this.to = to
+
+    const data = await this.loadData()
+    this.data = Object.values(data)
+    this.rerender()
+  }
+
   rerender() {
     this.subElements.header.textContent = this.calculateValue(this.data)
     this.subElements.body.innerHTML = this.getColumnBody(this.data)
