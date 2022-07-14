@@ -5,12 +5,12 @@ export default class ColumnChart {
   subElements = {}
   chartHeight = 50
 
-  calculateValue = data => data.reduce((accum, item) => accum + item, 0)
+  calculateValue = data => `${this.valuePrefix}${data.reduce((accum, item) => accum + item, 0)}`
 
-  constructor({ data = [], label = '', link = '' } = {}) {
-    this.data = data
+    valuePrefix = ''
     this.label = label
     this.link = link
+    this.valuePrefix = valuePrefix
 
     this.render()
   }
