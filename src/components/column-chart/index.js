@@ -3,6 +3,8 @@ export default class ColumnChart {
   subElements = {}
   chartHeight = 50
 
+  calculateValue = data => data.reduce((accum, item) => accum + item, 0)
+
   constructor({ data = [], label = '', link = '' } = {}) {
     this.data = data
     this.label = label
@@ -37,7 +39,7 @@ export default class ColumnChart {
         </div>
         <div class="column-chart__container">
           <div data-element="header" class="column-chart__header">
-            ${this.value}
+            ${this.calculateValue(this.data)}
           </div>
           <div data-element="body" class="column-chart__chart">
             ${this.getColumnBody(this.data)}
