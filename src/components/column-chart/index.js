@@ -3,11 +3,10 @@ export default class ColumnChart {
   subElements = {}
   chartHeight = 50
 
-  constructor({ data = [], label = '', link = '', value = 0 } = {}) {
+  constructor({ data = [], label = '', link = '' } = {}) {
     this.data = data
     this.label = label
     this.link = link
-    this.value = value
 
     this.render()
   }
