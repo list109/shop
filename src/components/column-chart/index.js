@@ -8,9 +8,19 @@ export default class ColumnChart {
 
   calculateValue = data => `${this.valuePrefix}${data.reduce((accum, item) => accum + item, 0)}`
 
+  constructor({
+    label = '',
+    link = '',
+    url = '',
+    from = new Date(),
+    to = new Date(),
     valuePrefix = ''
+  } = {}) {
     this.label = label
     this.link = link
+    this.url = new URL(url)
+    this.from = from
+    this.to = to
     this.valuePrefix = valuePrefix
 
     this.render()
