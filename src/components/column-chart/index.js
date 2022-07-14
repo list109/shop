@@ -87,9 +87,9 @@ export default class ColumnChart {
     }, {})
   }
 
-  update({ headerData, bodyData }) {
-    this.subElements.header.textContent = headerData
-    this.subElements.body.innerHTML = this.getColumnBody(bodyData)
+  rerender() {
+    this.subElements.header.textContent = this.calculateValue(this.data)
+    this.subElements.body.innerHTML = this.getColumnBody(this.data)
   }
 
   destroy() {
