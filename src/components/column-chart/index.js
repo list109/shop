@@ -26,6 +26,19 @@ export default class ColumnChart {
     this.render()
   }
 
+  async render() {
+    const element = document.createElement('div')
+
+    element.innerHTML = this.template
+    this.element = element.firstElementChild
+    this.subElements = this.getSubElements(this.element)
+
+    const data = await this.loadData()
+    this.data = Object.values(data)
+    this.rerender()
+
+    return this.element
+  }
   async loadData() {
     this.element.classList.add('column-chart_loading')
 
@@ -73,21 +86,6 @@ export default class ColumnChart {
         </div>
       </div>
     `
-  }
-
-  async render() {
-    const element = document.createElement('div')
-
-    element.innerHTML = this.template
-    this.element = element.firstElementChild
-
-    if (this.data.length) {
-      this.element.classList.remove(`column-chart_loading`)
-    }
-
-    this.subElements = this.getSubElements(this.element)
-
-    return this.element
   }
 
   getSubElements(element) {
