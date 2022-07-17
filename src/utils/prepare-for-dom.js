@@ -3,6 +3,9 @@ export function prepareForDom(getComponent) {
     let instance = getComponent(...args)
 
     return {
+      get instance() {
+        return instance
+      },
       get element() {
         return instance.element
       },
