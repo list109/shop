@@ -2,13 +2,7 @@ import RangePicker from './index.js'
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { prepareForDom } from '../../utils/prepare-for-dom.js'
-
-const getDaysBetweenDates = (from, to) => {
-  const millisecondsToDays = ms => ms / (24 * 60 * 60 * 1000)
-  const milliseconds = Math.abs(new Date(to).setHours(24) - new Date(from))
-
-  return millisecondsToDays(milliseconds)
-}
+import { getDaysBetweenDates } from '../../utils/get-days-between-dates.js'
 
 const getRangePicker = prepareForDom(
   ({ from = new Date(2019, 9, 2), to = new Date(2019, 10, 5) } = {}) =>
