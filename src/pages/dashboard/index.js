@@ -40,6 +40,7 @@ export default class Page {
     })
 
     const ordersChart = new ColumnChart({
+      id: 'column-chart-orders',
       url: `${process.env.BACKEND_URL}api/dashboard/orders`,
       label: 'Total orders',
       link: '#',
@@ -48,6 +49,7 @@ export default class Page {
     })
 
     const salesChart = new ColumnChart({
+      id: 'column-chart-sales',
       url: `${process.env.BACKEND_URL}api/dashboard/sales`,
       label: 'Total sales',
       valuePrefix: '$ ',
@@ -56,6 +58,7 @@ export default class Page {
     })
 
     const customersChart = new ColumnChart({
+      id: 'column-chart-customers',
       url: `${process.env.BACKEND_URL}api/dashboard/customers`,
       label: 'Total customers',
       from,
