@@ -1,4 +1,5 @@
 import fetchJson from '../../utils/fetch-json.js'
+import getUniqueId from '../../utils/create-unique-id'
 
 export default class ColumnChart {
   element
