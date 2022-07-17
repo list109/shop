@@ -61,7 +61,7 @@ export default class ColumnChart {
         const scale = this.chartHeight / maxValue
         const percent = ((item / maxValue) * 100).toFixed(0)
 
-        return `<div style="--value: ${Math.floor(item * scale)}" data-tooltip="${percent}%"></div>`
+        return `<li style="--value: ${Math.floor(item * scale)}" data-tooltip="${percent}%"></li>`
       })
       .join('')
   }
@@ -71,21 +71,27 @@ export default class ColumnChart {
   }
 
   get template() {
+    const captionId = getUniqueId({
+      prefix: this.id,
+      middle: 'caption'
+    })
+
     return `
-      <div class="column-chart column-chart_loading" style="--chart-height: ${this.chartHeight}">
-        <div class="column-chart__title">
+      <figure class="column-chart column-chart_loading" style="--chart-height: ${this.chartHeight}"
+      aria-labelledby="${captionId}">
+        <figcaption id="${captionId}" class="column-chart__title" role="caption">
           ${this.label}
           ${this.getLink()}
-        </div>
+        </figcaption>
         <div class="column-chart__container">
-          <div data-element="header" class="column-chart__header">
-            ${this.calculateValue(this.data)}
-          </div>
-          <div data-element="body" class="column-chart__chart">
+          <p data-element="header" class="column-chart__header">
+            <output>${this.getOutput()}</output>
+          </p>
+          <ul data-element="body" class="column-chart__chart">
             ${this.getColumnBody(this.data)}
-          </div>
+          </ul>
         </div>
-      </div>
+      </figure>
     `
   }
 
