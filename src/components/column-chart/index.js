@@ -10,6 +10,7 @@ export default class ColumnChart {
   calculateValue = data => data.reduce((accum, item) => accum + item, 0)
 
   constructor({
+    id = '',
     label = '',
     link = '',
     url = '',
@@ -17,6 +18,7 @@ export default class ColumnChart {
     to = new Date(),
     valuePrefix = ''
   } = {}) {
+    this.id = id
     this.label = label
     this.link = link
     this.url = new URL(url)
@@ -71,13 +73,16 @@ export default class ColumnChart {
   }
 
   get template() {
+    const id = this.id ? `id=${this.id}` : ''
     const captionId = getUniqueId({
       prefix: this.id,
       middle: 'caption'
     })
 
     return `
-      <figure class="column-chart column-chart_loading" style="--chart-height: ${this.chartHeight}"
+      <figure ${id} class="column-chart column-chart_loading" style="--chart-height: ${
+      this.chartHeight
+    }"
       aria-labelledby="${captionId}">
         <figcaption id="${captionId}" class="column-chart__title" role="caption">
           ${this.label}
