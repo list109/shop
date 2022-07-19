@@ -37,6 +37,7 @@ export default class ColumnChart {
     this.subElements = this.getSubElements(this.element)
 
     const data = await this.loadData()
+
     this.data = Object.values(data)
     this.rerender()
 
@@ -88,9 +89,10 @@ export default class ColumnChart {
           ${this.label}
           ${this.getLink()}
         </figcaption>
-        <div class="column-chart__container">
-          <p data-element="header" class="column-chart__header">
-            <output>${this.getOutput()}</output>
+        <div data-element="container" class="column-chart__container" data-testid="column-chart-container" 
+        aria-hidden="false">
+          <p class="column-chart__header">${this.valuePrefix}
+            <output data-element="output">${this.calculateValue(this.data)}</output>
           </p>
           <ul data-element="body" class="column-chart__chart">
             ${this.getColumnBody(this.data)}
