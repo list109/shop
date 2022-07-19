@@ -39,30 +39,28 @@ export default class Page {
       isSortLocally: true
     })
 
+    const chartUrl = `${
+      process.env.BACKEND_URL
+    }api/dashboard/name?from=${from.toISOString()}&to=${to.toISOString()}`
+
     const ordersChart = new ColumnChart({
       id: 'column-chart-orders',
-      url: `${process.env.BACKEND_URL}api/dashboard/orders`,
+      url: chartUrl.replace('name', 'orders'),
       label: 'Total orders',
-      link: '#',
-      from,
-      to
+      link: '#'
     })
 
     const salesChart = new ColumnChart({
       id: 'column-chart-sales',
-      url: `${process.env.BACKEND_URL}api/dashboard/sales`,
+      url: chartUrl.replace('name', 'sales'),
       label: 'Total sales',
-      valuePrefix: '$ ',
-      from,
-      to
+      valuePrefix: '$ '
     })
 
     const customersChart = new ColumnChart({
       id: 'column-chart-customers',
-      url: `${process.env.BACKEND_URL}api/dashboard/customers`,
-      label: 'Total customers',
-      from,
-      to
+      url: chartUrl.replace('name', 'customers'),
+      label: 'Total customers'
     })
 
     this.components.sortableTable = sortableTable

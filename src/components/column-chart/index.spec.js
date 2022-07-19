@@ -45,7 +45,7 @@ describe('ColumnChart', () => {
     const to = new Date(2020, 5, 10)
     const daysQuantity = getDaysBetweenDates(from, to)
     const url = getUrl({ url: BACKEND_URL, from, to })
-    const columnChart = getColumnChart({ url, from, to })
+    const columnChart = getColumnChart({ url })
     columnChart.render()
 
     const list = await screen.findByRole('list')
@@ -70,7 +70,7 @@ describe('ColumnChart', () => {
     const url = getUrl({ url: BACKEND_URL, from, to })
     const data = await fetchJson(url)
     const totalValue = Object.values(data).reduce((acc, i) => acc + i, 0)
-    const columnChart = getColumnChart({ url, from, to })
+    const columnChart = getColumnChart({ url })
     columnChart.render()
 
     const output = await screen.findByRole('status')
@@ -111,7 +111,7 @@ describe('ColumnChart', () => {
     const from = new Date(2020, 4, 10)
     const to = new Date(2020, 5, 10)
     const url = getUrl({ url: BACKEND_URL, from, to })
-    const columnChart = getColumnChart({ url, from, to })
+    const columnChart = getColumnChart({ url })
     columnChart.render()
     const container = screen.getByTestId('column-chart-container')
 
