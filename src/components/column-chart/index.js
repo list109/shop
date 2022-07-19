@@ -9,21 +9,11 @@ export default class ColumnChart {
 
   calculateValue = data => data.reduce((accum, item) => accum + item, 0)
 
-  constructor({
-    id = '',
-    label = '',
-    link = '',
-    url = '',
-    from = new Date(),
-    to = new Date(),
-    valuePrefix = ''
-  } = {}) {
+  constructor({ id = '', label = '', link = '', url = '', valuePrefix = '' } = {}) {
     this.id = id
     this.label = label
     this.link = link
     this.url = new URL(url)
-    this.from = from
-    this.to = to
     this.valuePrefix = valuePrefix
 
     this.render()
@@ -38,17 +28,13 @@ export default class ColumnChart {
 
     const data = await this.loadData()
 
-    this.data = Object.values(data)
-    this.rerender()
+    this.rerender(Object.values(data))
 
     return this.element
   }
   async loadData() {
     this.element.classList.add('column-chart_loading')
     this.subElements.container.setAttribute('aria-hidden', 'true')
-
-    this.url.searchParams.set('from', this.from.toISOString())
-    this.url.searchParams.set('to', this.to.toISOString())
 
     const data = await fetchJson(this.url)
 
@@ -94,10 +80,9 @@ export default class ColumnChart {
         <div data-element="container" class="column-chart__container" data-testid="column-chart-container" 
         aria-hidden="false">
           <p class="column-chart__header">${this.valuePrefix}
-            <output data-element="output">${this.calculateValue(this.data)}</output>
+            <output data-element="output">${this.calculateValue([])}</output>
           </p>
           <ul data-element="body" class="column-chart__chart">
-            ${this.getColumnBody(this.data)}
           </ul>
         </div>
       </figure>
@@ -114,18 +99,17 @@ export default class ColumnChart {
     }, {})
   }
 
-  async update({ from, to }) {
-    this.from = from
-    this.to = to
+  async update(queryParams) {
+    Object.keys(queryParams).forEach(param => this.url.searchParams.set(param, queryParams[param]))
 
     const data = await this.loadData()
-    this.data = Object.values(data)
-    this.rerender()
+
+    this.rerender(Object.values(data))
   }
 
-  rerender() {
-    this.subElements.output.textContent = this.calculateValue(this.data)
-    this.subElements.body.innerHTML = this.getColumnBody(this.data)
+  rerender(data) {
+    this.subElements.output.textContent = this.calculateValue(data)
+    this.subElements.body.innerHTML = this.getColumnBody(data)
   }
 
   destroy() {
