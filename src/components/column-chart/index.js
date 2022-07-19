@@ -45,6 +45,7 @@ export default class ColumnChart {
   }
   async loadData() {
     this.element.classList.add('column-chart_loading')
+    this.subElements.container.setAttribute('aria-hidden', 'true')
 
     this.url.searchParams.set('from', this.from.toISOString())
     this.url.searchParams.set('to', this.to.toISOString())
@@ -52,6 +53,7 @@ export default class ColumnChart {
     const data = await fetchJson(this.url)
 
     this.element.classList.remove('column-chart_loading')
+    this.subElements.container.setAttribute('aria-hidden', 'false')
 
     return data
   }
