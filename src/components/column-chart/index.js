@@ -102,8 +102,6 @@ export default class ColumnChart {
     `
   }
 
-  getOutput = () => `${this.valuePrefix}${this.calculateValue(this.data)}`
-
   getSubElements(element) {
     const elements = element.querySelectorAll('[data-element]')
 
@@ -124,7 +122,7 @@ export default class ColumnChart {
   }
 
   rerender() {
-    this.subElements.header.textContent = this.getOutput()
+    this.subElements.output.textContent = this.calculateValue(this.data)
     this.subElements.body.innerHTML = this.getColumnBody(this.data)
   }
 
