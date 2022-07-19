@@ -1,4 +1,7 @@
 {
+  "globals": {
+    "HOST": "readonly"
+  },
   "env": {
     "browser": true,
     "es6": true,

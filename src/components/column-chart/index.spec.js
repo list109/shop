@@ -4,7 +4,7 @@ import { server } from '../../mocks/server.js'
 import ColumnChart from './index.js'
 import { getDaysBetweenDates } from '../../utils/get-days-between-dates.js'
 import fetchJson from '../../utils/fetch-json.js'
-const BACKEND_URL = 'https://course-js.javascript.ru/api/dashboard/orders'
+const BACKEND_URL = `${HOST}/api/dashboard/orders`
 
 const getColumnChart = prepareForDom((...args) => new ColumnChart(...args))
 
