@@ -3,6 +3,18 @@
 @import url('variables.css');
 @import url('form.css');
 
+a {
+  color: var(--blue);
+  cursor: pointer;
+}
+
+button {
+  background: none;
+  border: none;
+  color: var(--blue);
+  font-size: initial;
+}
+
 body {
   font-family: 'Source Sans Pro', sans-serif;
 }
