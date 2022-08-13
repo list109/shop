@@ -17,9 +17,19 @@ export default class Products {
     const sortableTable = new SortableTable(header, {
       url,
       isSortLocally: false,
-      start: 1,
+      start: 0,
       end: 30,
-      step: 30
+      step: 30,
+      placeholder: `<div>
+          <p>No products have been found to fit the assigned criterion</p>
+          <button 
+          class="button-primary-outline"
+          type="button"
+          onclick=
+          "this.dispatchEvent(new CustomEvent('clear-filters', {bubbles: true}))">
+            Clear filters
+          </button>
+        </div>`
     })
 
     const rangeSlider = new RangeSlider({ max: 4000, prefix: '$' })
@@ -104,7 +114,7 @@ export default class Products {
   }
 
   initEventListeners() {
-    const { rangeSlider, filterName, filterStatus } = this.subElements
+    const { rangeSlider, filterName, filterStatus, sortableTable } = this.subElements
 
     rangeSlider.addEventListener('slider-change', event => {
       const { from, to } = event.detail
@@ -117,6 +127,18 @@ export default class Products {
 
     filterStatus.addEventListener('input', ({ target }) => {
       this.updateTableComponent({ status: target.value })
+    })
+
+    sortableTable.addEventListener('clear-filters', () => {
+      this.updateTableComponent({
+        title_like: '',
+        status: '',
+        price_gte: 0,
+        price_lte: this.components.sortableTable.max
+      })
+      filterName.value = ''
+      filterStatus.selectedIndex = 0
+      this.components.rangeSlider.reset()
     })
   }
 
