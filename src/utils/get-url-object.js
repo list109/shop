@@ -1,4 +1,4 @@
-export const getUrlObject = (url = '', params = {}) => {
+export const getUrlObject = (url, params = {}) => {
   const urlObj = new URL(url)
 
   Object.keys(params).forEach(param => {

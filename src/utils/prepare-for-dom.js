@@ -1,6 +1,6 @@
 export function prepareForDom(getComponent) {
-  return (...args) => {
-    let instance = getComponent(...args)
+  return obj => {
+    let instance = getComponent(obj)
 
     return {
       get instance() {
