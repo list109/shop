@@ -3,23 +3,16 @@ import SortableTable from '../../components/sortable-table/index.js'
 import ColumnChart from '../../components/column-chart/index.js'
 import header from './bestsellers-header.js'
 
-import fetchJson from '../../utils/fetch-json.js'
-
 export default class Page {
   element
   subElements = {}
   components = {}
 
-  async updateTableComponent(from, to) {
-    const data = await fetchJson(
-      `${
-        process.env.BACKEND_URL
-      }api/dashboard/bestsellers?_start=1&_end=20&from=${from.toISOString()}&to=${to.toISOString()}`
-    )
-    this.components.sortableTable.addRows(data)
+  updateTableComponent(from, to) {
+    this.components.sortableTable.update({ from, to })
   }
 
-  async updateChartsComponents(from, to) {
+  updateChartsComponents(from, to) {
     this.components.ordersChart.update({ from, to })
     this.components.salesChart.update({ from, to })
     this.components.customersChart.update({ from, to })
@@ -34,9 +27,16 @@ export default class Page {
       to
     })
 
+    const tableUrl = `${
+      process.env.BACKEND_URL
+    }api/dashboard/bestsellers?from=${from.toISOString()}&to=${to.toISOString()}`
+
     const sortableTable = new SortableTable(header, {
-      url: `api/dashboard/bestsellers?_start=1&_end=20&from=${from.toISOString()}&to=${to.toISOString()}`,
-      isSortLocally: true
+      url: tableUrl,
+      isSortLocally: true,
+      start: 1,
+      end: 21,
+      step: 20
     })
 
     const chartUrl = `${
@@ -71,22 +71,22 @@ export default class Page {
   }
 
   get template() {
-    return `<div class="dashboard">
+    return `<div class="dashboard full-height flex-column" >
       <div class="content__top-panel">
         <h2 class="page-title">Dashboard</h2>
         <!-- RangePicker component -->
-        <div data-element="rangePicker"></div>
+        <div data-elem="rangePicker"></div>
       </div>
-      <div data-element="chartsRoot" class="dashboard__charts">
+      <div data-elem="chartsRoot" class="dashboard__charts">
         <!-- column-chart components -->
-        <div data-element="ordersChart" class="dashboard__chart_orders"></div>
-        <div data-element="salesChart" class="dashboard__chart_sales"></div>
-        <div data-element="customersChart" class="dashboard__chart_customers"></div>
+        <div data-elem="ordersChart" class="dashboard__chart_orders"></div>
+        <div data-elem="salesChart" class="dashboard__chart_sales"></div>
+        <div data-elem="customersChart" class="dashboard__chart_customers"></div>
       </div>
 
       <h3 class="block-title">Best sellers</h3>
 
-      <div data-element="sortableTable">
+      <div class="dashboard_table" data-elem="sortableTable">
         <!-- sortable-table component -->
       </div>
     </div>`
@@ -108,6 +108,16 @@ export default class Page {
     return this.element
   }
 
+  getSubElements($element) {
+    const elements = $element.querySelectorAll('[data-elem]')
+
+    return [...elements].reduce((accum, subElement) => {
+      accum[subElement.dataset.elem] = subElement
+
+      return accum
+    }, {})
+  }
+
   renderComponents() {
     Object.keys(this.components).forEach(component => {
       const root = this.subElements[component]
@@ -117,19 +127,11 @@ export default class Page {
     })
   }
 
-  getSubElements($element) {
-    const elements = $element.querySelectorAll('[data-element]')
-
-    return [...elements].reduce((accum, subElement) => {
-      accum[subElement.dataset.element] = subElement
-
-      return accum
-    }, {})
-  }
-
   initEventListeners() {
     this.components.rangePicker.element.addEventListener('date-select', event => {
-      const { from, to } = event.detail
+      let { from, to } = event.detail
+      from = from.toISOString()
+      to = to.toISOString()
       this.updateChartsComponents(from, to)
       this.updateTableComponent(from, to)
     })

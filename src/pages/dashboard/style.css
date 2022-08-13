@@ -20,3 +20,7 @@
 .dashboard .sortable-table {
   --cols: 6;
 }
+
+.dashboard_table {
+  flex: auto;
+}

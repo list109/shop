@@ -5,9 +5,9 @@ const header = [
     sortable: false,
     template: data => {
       return `
-          <div class="sortable-table__cell">
+          <td class="sortable-table__cell">
             <img class="sortable-table-image" alt="Image" src="${data[0].url}">
-          </div>
+          </td>
         `
     }
   },
@@ -35,9 +35,9 @@ const header = [
     sortable: true,
     sortType: 'number',
     template: data => {
-      return `<div class="sortable-table__cell">
+      return `<td class="sortable-table__cell">
           ${data > 0 ? 'Active' : 'Inactive'}
-        </div>`
+        </td>`
     }
   }
 ]
