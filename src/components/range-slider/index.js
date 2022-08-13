@@ -134,6 +134,15 @@ export default class RangeSlider {
     inner.addEventListener('pointerdown', this.onPointerDown)
   }
 
+  reset() {
+    const { thumbRight, thumbLeft, progress } = this.subElements
+
+    thumbRight.style.right = '0%'
+    thumbLeft.style.left = '0%'
+    progress.style.right = thumbRight.style.right
+    progress.style.left = thumbLeft.style.left
+  }
+
   destroy() {
     this.element.remove()
   }
