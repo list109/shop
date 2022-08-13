@@ -109,7 +109,8 @@ export default class SortableTable {
       isSortLocally = false,
       step = 20,
       start = 1,
-      end = start + step
+      end = start + step,
+      placeholder
     } = {}
   ) {
     this.headersConfig = headersConfig
@@ -119,6 +120,7 @@ export default class SortableTable {
     this.step = step
     this.start = start
     this.end = end
+    this.placeholder = placeholder
 
     this.render()
   }
@@ -290,7 +292,7 @@ export default class SortableTable {
         <div data-elem="loading" class="loading-line sortable-table__loading-line"  role="progress"></div>
         
         <div data-elem="placeholder" class="sortable-table__empty-placeholder" data-testid="placeholder">
-          <p>No products</p>
+          ${this.placeholder || '<p>No products</p>'}
         </div>
 
 
