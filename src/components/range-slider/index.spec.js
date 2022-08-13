@@ -31,7 +31,6 @@ describe('RangeSlider', () => {
   })
   it('should indicate initial range values', () => {
     const { rangeSlider, from, to } = setup({ max: 4000 })
-    rangeSlider.render()
 
     expect(from).toHaveTextContent('0')
     expect(to).toHaveTextContent('4000')
@@ -40,7 +39,6 @@ describe('RangeSlider', () => {
   })
   it('should have a specific class when either thumb is being held', async () => {
     const { rangeSlider, thumbRight, thumbLeft, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     await user.pointer({ keys: '[MouseLeft>]', target: thumbLeft })
     expect(rangeSlider.element).toHaveClass('range-slider_dragging')
@@ -54,7 +52,6 @@ describe('RangeSlider', () => {
   })
   it('should have ability to change the range From value', async () => {
     const { rangeSlider, thumbRight, thumbLeft, inner, from, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     inner._mockClientRect = { left: 100, right: 400, width: 300 }
     thumbLeft._mockClientRect = { left: 92, right: 100, width: 8 }
@@ -68,7 +65,6 @@ describe('RangeSlider', () => {
   })
   it('should have ability to change the To range value', async () => {
     const { rangeSlider, thumbRight, thumbLeft, inner, to, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     inner._mockClientRect = { left: 100, right: 400, width: 300 }
     thumbLeft._mockClientRect = { left: 92, right: 100, width: 8 }
@@ -82,7 +78,6 @@ describe('RangeSlider', () => {
   })
   it('should not go outside the left edge if it is the left thumb', async () => {
     const { rangeSlider, thumbRight, thumbLeft, inner, from, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     inner._mockClientRect = { left: 100, right: 400, width: 300 }
     thumbLeft._mockClientRect = { left: 92, right: 100, width: 8 }
@@ -96,7 +91,6 @@ describe('RangeSlider', () => {
   })
   it('should not go outside the right thumb position if it is the left thumb', async () => {
     const { rangeSlider, thumbRight, thumbLeft, inner, from, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     inner._mockClientRect = { left: 100, right: 400, width: 300 }
     thumbLeft._mockClientRect = { left: 92, right: 100, width: 8 }
@@ -110,7 +104,6 @@ describe('RangeSlider', () => {
   })
   it('should not go outside the right edge if it is the right thumb', async () => {
     const { rangeSlider, thumbRight, thumbLeft, inner, to, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     inner._mockClientRect = { left: 100, right: 400, width: 300 }
     thumbLeft._mockClientRect = { left: 92, right: 100, width: 8 }
@@ -124,7 +117,6 @@ describe('RangeSlider', () => {
   })
   it('should not go outside the left thumb position if it is the right thumb', async () => {
     const { rangeSlider, thumbRight, thumbLeft, inner, to, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     inner._mockClientRect = { left: 100, right: 400, width: 300 }
     thumbLeft._mockClientRect = { left: 242, right: 250, width: 8 }
@@ -138,7 +130,6 @@ describe('RangeSlider', () => {
   })
   it('should have equal values if both thumbs meet in the center', async () => {
     const { rangeSlider, thumbRight, thumbLeft, inner, from, to, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     inner._mockClientRect = { left: 100, right: 400, width: 300 }
     thumbLeft._mockClientRect = { left: 92, right: 100, width: 8 }
@@ -158,7 +149,6 @@ describe('RangeSlider', () => {
 
   it('should make up the total if both thumbs are against each other no matter where they meet', async () => {
     const { rangeSlider, thumbRight, thumbLeft, inner, from, to, user } = setup({ max: 4000 })
-    rangeSlider.render()
 
     inner._mockClientRect = { left: 100, right: 400, width: 300 }
     thumbLeft._mockClientRect = { left: 92, right: 100, width: 8 }
