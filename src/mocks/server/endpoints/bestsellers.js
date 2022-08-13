@@ -17,8 +17,10 @@ const generateResponse = length => {
 }
 
 export const bestsellers = rest.get('*/api/dashboard/bestsellers', (req, res, ctx) => {
-  const order = req.url.searchParams.get('_order') || 'asc'
+  const order = req.url.searchParams.get('_order')
+  const start = req.url.searchParams.get('_start')
+  const end = req.url.searchParams.get('_end')
+  const body = generateResponse(end - start)
 
-  const body = generateResponse(20)
   return res(ctx.json(order === 'asc' ? body : body.reverse()))
 })
