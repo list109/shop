@@ -32,6 +32,7 @@ export default class ColumnChart {
 
     return this.element
   }
+
   async loadData() {
     this.element.classList.add('column-chart_loading')
     this.subElements.container.setAttribute('aria-hidden', 'true')
@@ -77,12 +78,12 @@ export default class ColumnChart {
           ${this.label}
           ${this.getLink()}
         </figcaption>
-        <div data-element="container" class="column-chart__container" data-testid="column-chart-container" 
+        <div data-elem="container" class="column-chart__container" data-testid="column-chart-container" 
         aria-hidden="false">
           <p class="column-chart__header">${this.valuePrefix}
-            <output data-element="output">${this.calculateValue([])}</output>
+            <output data-elem="output">${this.calculateValue([])}</output>
           </p>
-          <ul data-element="body" class="column-chart__chart">
+          <ul data-elem="body" class="column-chart__chart">
           </ul>
         </div>
       </figure>
@@ -90,10 +91,10 @@ export default class ColumnChart {
   }
 
   getSubElements(element) {
-    const elements = element.querySelectorAll('[data-element]')
+    const elements = element.querySelectorAll('[data-elem]')
 
     return [...elements].reduce((accum, subElement) => {
-      accum[subElement.dataset.element] = subElement
+      accum[subElement.dataset.elem] = subElement
 
       return accum
     }, {})
