@@ -1,35 +1,62 @@
 import fetchJson from '../../utils/fetch-json.js'
 
-const BACKEND_URL = 'https://course-js.javascript.ru'
-
 export default class SortableTable {
   element
   subElements = {}
   data = []
-  loading = false
-  step = 20
-  start = 1
-  end = this.start + this.step
+  _loadType = null
+
+  set loadType(type) {
+    const { header } = this.subElements
+    const thElements = header.querySelectorAll('th')
+
+    for (const th of thElements) {
+      const { sortable } = th.dataset
+      if (sortable) {
+        th.setAttribute('aria-disabled', type === null ? 'false' : 'true')
+      }
+    }
+
+    this.element.classList[type ? 'add' : 'remove']('sortable-table_loading')
+
+    this._loadType = type
+  }
+
+  get loadType() {
+    return this._loadType
+  }
 
   onWindowScroll = async () => {
     const { bottom } = this.element.getBoundingClientRect()
-    const { id, order } = this.sorted
 
-    if (bottom < document.documentElement.clientHeight && !this.loading && !this.sortLocally) {
+    if (
+      bottom < document.documentElement.clientHeight &&
+      !this.loadType &&
+      !this.isSortLocally &&
+      this.data.length &&
+      this.isDataOnServer
+    ) {
       this.start = this.end
       this.end = this.start + this.step
 
-      this.loading = true
+      this.loadType = 'onscroll'
 
-      const data = await this.loadData(id, order, this.start, this.end)
-      this.update(data)
+      const data = await this.loadData(this.url, {
+        _start: this.start,
+        _end: this.end
+      })
 
-      this.loading = false
+      if (this.loadType !== 'onscroll') return
+      this.loadType = null
+
+      if (data.length < 1) this.isDataOnServer = false
+
+      this.append(data)
     }
   }
 
   onSortClick = event => {
-    const column = event.target.closest('[data-sortable="true"]')
+    const column = event.target.closest('[data-sortable]')
     const toggleOrder = order => {
       const orders = {
         asc: 'desc',
@@ -39,7 +66,7 @@ export default class SortableTable {
       return orders[order]
     }
 
-    if (column) {
+    if (column && !this.loadType) {
       const { id, order } = column.dataset
       const newOrder = toggleOrder(order)
 
@@ -54,8 +81,20 @@ export default class SortableTable {
       if (this.isSortLocally) {
         this.sortLocally(id, newOrder)
       } else {
-        this.sortOnServer(id, newOrder, 1, 1 + this.step)
+        this.start = 1
+        this.end = this.start + this.step
+        this.sortOnServer(id, newOrder, this.start, this.end)
       }
+    }
+  }
+
+  onProductClick = ({ target }) => {
+    const row = target.closest('tr')
+
+    if (row) {
+      const link = document.createElement('a')
+      link.href = `/products/${row.dataset.id}`
+      link.click()
     }
   }
 
@@ -74,9 +113,9 @@ export default class SortableTable {
     } = {}
   ) {
     this.headersConfig = headersConfig
-    this.url = new URL(url, BACKEND_URL)
-    this.sorted = sorted
+    this.url = new URL(url)
     this.isSortLocally = isSortLocally
+    this.sorted = sorted
     this.step = step
     this.start = start
     this.end = end
@@ -85,7 +124,6 @@ export default class SortableTable {
   }
 
   async render() {
-    const { id, order } = this.sorted
     const wrapper = document.createElement('div')
 
     wrapper.innerHTML = this.getTable()
@@ -95,38 +133,56 @@ export default class SortableTable {
     this.element = element
     this.subElements = this.getSubElements(element)
 
-    const data = await this.loadData(id, order, this.start, this.end)
+    this.loadType = 'initial'
+    const data = await this.loadData(this.url)
+    if (this.loadType === 'initial') this.loadType = null
 
     this.renderRows(data)
     this.initEventListeners()
     return this.element
   }
 
-  async loadData(id, order, start = this.start, end = this.end) {
-    this.url.searchParams.set('_sort', id)
-    this.url.searchParams.set('_order', order)
-    this.url.searchParams.set('_start', start)
-    this.url.searchParams.set('_end', end)
+  async loadData(
+    url = this.url,
+    queryParams = {
+      _sort: this.sorted.id,
+      _order: this.sorted.order,
+      _start: this.start,
+      _end: this.end
+    }
+  ) {
+    this.isDataOnServer = true
+    this.setParams(url, queryParams)
 
-    this.element.classList.add('sortable-table_loading')
+    let data
 
-    const data = await fetchJson(this.url)
-
-    this.element.classList.remove('sortable-table_loading')
+    try {
+      data = await fetchJson(url)
+    } catch (err) {
+      this.element.dispatchEvent(new CustomEvent('error', { detail: err }))
+      data = []
+    }
 
     return data
   }
 
+  setParams(url, queryParams = {}) {
+    Object.keys(queryParams).forEach(param => {
+      const value = queryParams[param]
+      url.searchParams[value ? 'set' : 'delete'](param, value)
+    })
+  }
+
   addRows(data) {
     this.data = data
-
     this.subElements.body.innerHTML = this.getTableRows(data)
   }
 
-  update(data) {
-    const rows = document.createElement('div')
+  append(data) {
+    const rows = document.createElement('tbody')
 
     this.data = [...this.data, ...data]
+
     rows.innerHTML = this.getTableRows(data)
 
     // TODO: This is comparison of performance append vs insertAdjacentHTML
@@ -136,20 +192,45 @@ export default class SortableTable {
     // console.timeEnd('timer');
   }
 
+  async update(externalParams = {}) {
+    if (this.loadType === 'update') return
+    this.loadType = 'update'
+
+    this.addRows([])
+
+    this.start = 1
+    this.end = this.start + this.step
+
+    const data = await this.loadData(this.url, {
+      _start: this.start,
+      _end: this.end,
+      ...externalParams
+    })
+
+    this.loadType = null
+
+    this.renderRows(data)
+  }
+
   getTableHeader() {
-    return `<div data-element="header" class="sortable-table__header sortable-table__row">
-      ${this.headersConfig.map(item => this.getHeaderRow(item)).join('')}
-    </div>`
+    return `
+      <thead data-testid="thead">
+        <tr data-elem="header" class="sortable-table__header sortable-table__row">
+          ${this.headersConfig.map(item => this.getHeaderRow(item)).join('')}
+        </tr>
+      </thead>`
   }
 
   getHeaderRow({ id, title, sortable }) {
     const order = this.sorted.id === id ? this.sorted.order : 'asc'
 
     return `
-      <div class="sortable-table__cell" data-id="${id}" data-sortable="${sortable}" data-order="${order}">
+      <th class="sortable-table__cell" data-id="${id}" data-order="${order}" ${
+      sortable ? 'aria-disabled="true" data-sortable' : ''
+    }>
         <span>${title}</span>
         ${this.getHeaderSortingArrow(id)}
-      </div>
+      </th>
     `
   }
 
@@ -157,7 +238,7 @@ export default class SortableTable {
     const isOrderExist = this.sorted.id === id ? this.sorted.order : ''
 
     return isOrderExist
-      ? `<span data-element="arrow" class="sortable-table__sort-arrow">
+      ? `<span data-elem="arrow" class="sortable-table__sort-arrow">
           <span class="sort-arrow"></span>
         </span>`
       : ''
@@ -165,18 +246,17 @@ export default class SortableTable {
 
   getTableBody(data) {
     return `
-      <div data-element="body" class="sortable-table__body">
+      <tbody data-elem="body" class="sortable-table__body" data-testid="tbody">
         ${this.getTableRows(data)}
-      </div>`
+      </tbody>`
   }
 
   getTableRows(data) {
     return data
       .map(
-        item => `
-      <div class="sortable-table__row">
-        ${this.getTableRow(item, data)}
-      </div>`
+        item => `<tr data-id="${item.id}" class="sortable-table__row">
+          ${this.getTableRow(item, data)}
+        </tr>`
       )
       .join('')
   }
@@ -191,38 +271,58 @@ export default class SortableTable {
 
     return cells
       .map(({ id, template }) => {
-        return template ? template(item[id]) : `<div class="sortable-table__cell">${item[id]}</div>`
+        const value = id.split('.').reduce((item, prop) => item[prop], item)
+
+        return template ? template(value) : `<td class="sortable-table__cell">${value}</td>`
       })
       .join('')
   }
 
   getTable() {
     return `
-      <div class="sortable-table">
-        ${this.getTableHeader()}
-        ${this.getTableBody(this.data)}
+      <div class="sortable-table" data-testid="container">
+      
+        <table class="sortable-table__table" role="grid">
+          ${this.getTableHeader()}
+          ${this.getTableBody(this.data)}
+        </table>
 
-        <div data-element="loading" class="loading-line sortable-table__loading-line"></div>
-
-        <div data-element="emptyPlaceholder" class="sortable-table__empty-placeholder">
-          No products
+        <div data-elem="loading" class="loading-line sortable-table__loading-line"  role="progress"></div>
+        
+        <div data-elem="placeholder" class="sortable-table__empty-placeholder" data-testid="placeholder">
+          <p>No products</p>
         </div>
+
+
       </div>`
   }
 
   initEventListeners() {
     this.subElements.header.addEventListener('pointerdown', this.onSortClick)
+    this.subElements.body.addEventListener('pointerdown', this.onProductClick)
     document.addEventListener('scroll', this.onWindowScroll)
   }
 
   sortLocally(id, order) {
     const sortedData = this.sortData(id, order)
 
-    this.subElements.body.innerHTML = this.getTableBody(sortedData)
+    this.subElements.body.innerHTML = this.getTableRows(sortedData)
   }
 
   async sortOnServer(id, order, start, end) {
-    const data = await this.loadData(id, order, start, end)
+    this.loadType = 'onsort'
+
+    this.addRows([])
+
+    const data = await this.loadData(this.url, {
+      _sort: id,
+      _order: order,
+      _start: start,
+      _end: end
+    })
+
+    if (this.loadType !== 'onsort') return
+    this.loadType = null
 
     this.renderRows(data)
   }
@@ -257,10 +357,10 @@ export default class SortableTable {
   }
 
   getSubElements(element) {
-    const elements = element.querySelectorAll('[data-element]')
+    const elements = element.querySelectorAll('[data-elem]')
 
     return [...elements].reduce((accum, subElement) => {
-      accum[subElement.dataset.element] = subElement
+      accum[subElement.dataset.elem] = subElement
 
       return accum
     }, {})

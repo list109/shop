@@ -2,11 +2,15 @@
   background-color: var(--white);
   max-width: 100%;
   border-radius: 4px;
-  margin-bottom: 40px;
+  margin-bottom: 0;
   overflow: hidden;
 }
 
-.sortable-table__row {
+.sortable-table__table {
+  width: 100%;
+}
+
+.dashboard .sortable-table__row {
   display: grid;
   grid: auto-flow / 80px calc(50% - 80px) 20% 15% 15%;
   text-decoration: none;
@@ -23,6 +27,7 @@
   display: flex;
   align-items: center;
   border-top: 1px solid var(--grey-light);
+  cursor: pointer;
 }
 
 .sortable-table__cell:first-child {
@@ -42,6 +47,11 @@
   cursor: pointer;
 }
 
+.sortable-table_loading .sortable-table__header .sortable-table__cell[data-sortable]:hover {
+  cursor: initial;
+  color: var(--grey-light);
+}
+
 .sortable-table__cell-img {
   height: 40px;
   max-width: 100%;
@@ -54,6 +64,10 @@
   padding: 8px;
   display: inline-flex;
   cursor: pointer;
+}
+
+.sortable-table_loading .sortable-table__sort-arrow {
+  cursor: initial;
 }
 
 .sortable-table__cell[data-order='asc'] .sort-arrow {
@@ -87,22 +101,22 @@
 }
 
 .sortable-table__empty-placeholder p {
-  margin: 0 0 12px;
+  margin: 0;
 }
 
 .sortable-table__empty-placeholder,
-.sortable-table_empty .sortable-table__header,
-.sortable-table_empty .sortable-table__body {
+.sortable-table_empty .sortable-table__header {
   display: none;
 }
 
+.dashboard .sortable-table_empty .sortable-table__empty-placeholder,
 .sortable-table_empty .sortable-table__empty-placeholder {
   background: var(--grey-extra-light);
   border: 1px solid var(--grey-light);
   border-radius: 4px;
   flex: 1 0 auto;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
   align-items: center;
   justify-content: center;
   color: var(--grey);
@@ -123,10 +137,6 @@
 .sortable-field-tooltip__subcategory {
   color: var(--dark-blue);
 }
-
-/*.sortable-table.sortable-table_loading .sortable-table__body {*/
-/*  display: none;*/
-/*}*/
 
 .sortable-table.sortable-table_loading .sortable-table__loading-line {
   display: grid;
