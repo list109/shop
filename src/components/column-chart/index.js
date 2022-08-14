@@ -9,6 +9,20 @@ export default class ColumnChart {
 
   calculateValue = data => data.reduce((accum, item) => accum + item, 0)
 
+  onChartPointerOver = ({ target }) => {
+    const { body } = this.subElements
+
+    if (target.parentNode === body) {
+      body.classList.add('has-hovered')
+      target.classList.add('is-hovered')
+    }
+  }
+
+  onChartPointerOut = ({ target }) => {
+    this.subElements.body.classList.remove('has-hovered')
+    target.classList.remove('is-hovered')
+  }
+
   constructor({ id = '', label = '', link = '', url = '', valuePrefix = '' } = {}) {
     this.id = id
     this.label = label
@@ -30,6 +44,7 @@ export default class ColumnChart {
 
     this.rerender(Object.values(data))
 
+    this.initEventListeners()
     return this.element
   }
 
@@ -109,8 +124,9 @@ export default class ColumnChart {
   }
 
   rerender(data) {
-    this.subElements.output.textContent = this.calculateValue(data)
-    this.subElements.body.innerHTML = this.getColumnBody(data)
+  initEventListeners() {
+    this.subElements.body.addEventListener('pointerover', this.onChartPointerOver)
+    this.subElements.body.addEventListener('pointerout', this.onChartPointerOut)
   }
 
   destroy() {
