@@ -273,9 +273,7 @@ export default class SortableTable {
 
     return cells
       .map(({ id, template }) => {
-        const value = id.split('.').reduce((item, prop) => item[prop], item)
-
-        return template ? template(value) : `<td class="sortable-table__cell">${value}</td>`
+        return template ? template(item[id]) : `<td class="sortable-table__cell">${item[id]}</td>`
       })
       .join('')
   }
