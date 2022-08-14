@@ -84,7 +84,7 @@ describe('RangePicker', () => {
 
     expect(input).toHaveAttribute('aria-expanded', 'true')
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
     const firstDate = within(month1).getByRole('gridcell', { name: '1' })
     const secondDate = within(month1).getByRole('gridcell', { name: '15' })
 
@@ -99,8 +99,8 @@ describe('RangePicker', () => {
   it("should show selected dates 'dateFrom-dateTo' in input", () => {
     const { rangePicker } = setup()
 
-    const dateFrom = screen.queryByText('02.10.2019')
-    const dateTo = screen.queryByText('05.11.2019')
+    const dateFrom = screen.queryByText('02/10/2019')
+    const dateTo = screen.queryByText('05/11/2019')
 
     expect(dateFrom).toBeInTheDocument()
     expect(dateTo).toBeInTheDocument()
@@ -140,7 +140,7 @@ describe('RangePicker', () => {
 
     await user.click(input)
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
     const someDate = within(month1).getByRole('gridcell', { name: '1' })
 
     await user.click(someDate)
@@ -158,7 +158,7 @@ describe('RangePicker', () => {
     // open date picker
     await user.click(input)
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
     const prevDate = within(month1).getByRole('gridcell', { name: '1' })
     const nextDate = within(month1).getByRole('gridcell', { name: '3' })
 
@@ -178,8 +178,8 @@ describe('RangePicker', () => {
     await user.click(input)
 
     const months = screen.getAllByRole('grid')
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
-    const month2 = screen.getByRole('grid', { name: /^Ноябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
+    const month2 = screen.getByRole('grid', { name: /^November$/i })
 
     expect(months).toHaveLength(2)
     expect(month1).toBeInTheDocument()
@@ -199,8 +199,8 @@ describe('RangePicker', () => {
     await user.click(prevMonthButton)
 
     const months = screen.getAllByRole('grid')
-    const month2 = screen.getByRole('grid', { name: /^Ноябрь$/i })
-    const month1 = screen.getByRole('grid', { name: /^Декабрь$/i })
+    const month2 = screen.getByRole('grid', { name: /^November$/i })
+    const month1 = screen.getByRole('grid', { name: /^December$/i })
 
     expect(months).toHaveLength(2)
     expect(month1).toBeInTheDocument()
@@ -220,8 +220,8 @@ describe('RangePicker', () => {
     await user.click(prevMonthButton)
 
     const months = screen.getAllByRole('grid')
-    const month1 = screen.getByRole('grid', { name: /^Сентябрь$/i })
-    const month2 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^September$/i })
+    const month2 = screen.getByRole('grid', { name: /^October$/i })
 
     expect(months).toHaveLength(2)
     expect(month1).toBeInTheDocument()
@@ -237,8 +237,8 @@ describe('RangePicker', () => {
     await user.click(input)
     expect(input).toHaveAttribute('aria-expanded', 'true')
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
-    const month2 = screen.getByRole('grid', { name: /^Ноябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
+    const month2 = screen.getByRole('grid', { name: /^November$/i })
     const firstDate = within(month1).getByRole('gridcell', { name: '1' })
     const secondDate = within(month2).getByRole('gridcell', { name: '30' })
 
@@ -278,7 +278,7 @@ describe('RangePicker', () => {
     // open date picker
     await user.click(input)
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
     const firstDate = within(month1).getByRole('gridcell', { name: '1' })
 
     // change "from" date
@@ -288,7 +288,7 @@ describe('RangePicker', () => {
     const nextMonthButton = screen.getByRole('button', { name: 'next month' })
     await user.click(nextMonthButton)
 
-    const month2 = screen.getByRole('grid', { name: /^Декабрь$/i })
+    const month2 = screen.getByRole('grid', { name: /^December$/i })
     const secondDate = within(month2).getByRole('gridcell', { name: '31' })
     // change "to" date
     await user.click(secondDate)
@@ -305,7 +305,7 @@ describe('RangePicker', () => {
     // open date picker
     await user.click(input)
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
     const firstDate = within(month1).getByRole('gridcell', { name: '1' })
 
     // change "from" date
@@ -324,7 +324,7 @@ describe('RangePicker', () => {
     // open date picker
     await user.click(input)
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
     const firstDate = within(month1).getByRole('gridcell', { name: '1' })
     const secondDate = within(month1).getByRole('gridcell', { name: '2' })
 
@@ -350,7 +350,7 @@ describe('RangePicker', () => {
     // open date picker
     await user.click(input)
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
     const firstDate = within(month1).getByRole('gridcell', { name: '1' })
     const secondDate = within(month1).getByRole('gridcell', { name: '1' })
 
@@ -378,7 +378,7 @@ describe('RangePicker', () => {
     // open date picker
     await user.click(input)
 
-    const month1 = screen.getByRole('grid', { name: /^Октябрь$/i })
+    const month1 = screen.getByRole('grid', { name: /^October$/i })
     const firstDate = within(month1).getByRole('gridcell', { name: '1' })
 
     // change "from" date to "01.10.2019"
@@ -390,7 +390,7 @@ describe('RangePicker', () => {
       await user.click(nextMonthButton)
     }
 
-    const month2 = screen.getByRole('grid', { name: /^Ноябрь$/i })
+    const month2 = screen.getByRole('grid', { name: /^November$/i })
     const secondDate = within(month2).getByRole('gridcell', { name: '1' })
     // change "to" date "01.11.2020"
     await user.click(secondDate)
