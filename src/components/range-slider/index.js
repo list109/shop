@@ -135,12 +135,14 @@ export default class RangeSlider {
   }
 
   reset() {
-    const { thumbRight, thumbLeft, progress } = this.subElements
+    const { thumbRight, thumbLeft, progress, from, to } = this.subElements
 
     thumbRight.style.right = '0%'
     thumbLeft.style.left = '0%'
     progress.style.right = thumbRight.style.right
     progress.style.left = thumbLeft.style.left
+    from.textContent = 0
+    to.textContent = this.max
   }
 
   destroy() {
