@@ -54,7 +54,7 @@ export default class Page {
       id: 'column-chart-sales',
       url: chartUrl.replace('name', 'sales'),
       label: 'Total sales',
-      valuePrefix: '$ '
+      valuePrefix: '$'
     })
 
     const customersChart = new ColumnChart({
