@@ -1,5 +1,6 @@
 import fetchJson from '../../utils/fetch-json.js'
 import getUniqueId from '../../utils/create-unique-id'
+import { stringToDate } from '../../utils/string-to-date'
 
 export default class ColumnChart {
   element
@@ -42,7 +43,7 @@ export default class ColumnChart {
 
     const data = await this.loadData()
 
-    this.rerender(Object.values(data))
+    this.rerender(data)
 
     this.initEventListeners()
     return this.element
@@ -60,17 +61,28 @@ export default class ColumnChart {
     return data
   }
 
-  getColumnBody(data) {
-    const maxValue = Math.max(...data)
+  getColumnBody(dates, values) {
+    const maxValue = Math.max(...values)
 
-    return data
-      .map(item => {
+    return values
+      .map((value, i) => {
         const scale = this.chartHeight / maxValue
-        const percent = ((item / maxValue) * 100).toFixed(0)
+        const date = stringToDate(dates[i])
+        const tooltip = this.getTooltip({ value, date })
 
-        return `<li style="--value: ${Math.floor(item * scale)}" data-tooltip="${percent}%"></li>`
+        return `<li style="--value: ${Math.floor(value * scale)}" data-tooltip="${tooltip}"></li>`
       })
       .join('')
+  }
+
+  getTooltip({ value, date }) {
+    return `
+      <div>
+        <small>${date.toLocaleString('en', {
+          dateStyle: 'medium'
+        })}</small>
+      </div>
+      <strong>${this.valuePrefix}${value.toLocaleString('en')}</strong>`
   }
 
   getLink() {
@@ -95,8 +107,8 @@ export default class ColumnChart {
         </figcaption>
         <div data-elem="container" class="column-chart__container" data-testid="column-chart-container" 
         aria-hidden="false">
-          <p class="column-chart__header">${this.valuePrefix}
-            <output data-elem="output">${this.calculateValue([])}</output>
+          <p class="column-chart__header">
+            ${this.valuePrefix}<output data-elem="output">${this.calculateValue([])}</output>
           </p>
           <ul data-elem="body" class="column-chart__chart">
           </ul>
@@ -120,10 +132,17 @@ export default class ColumnChart {
 
     const data = await this.loadData()
 
-    this.rerender(Object.values(data))
+    this.rerender(data)
   }
 
   rerender(data) {
+    const dates = Object.keys(data)
+    const values = Object.values(data)
+
+    this.subElements.output.textContent = this.calculateValue(values)
+    this.subElements.body.innerHTML = this.getColumnBody(dates, values)
+  }
+
   initEventListeners() {
     this.subElements.body.addEventListener('pointerover', this.onChartPointerOver)
     this.subElements.body.addEventListener('pointerout', this.onChartPointerOut)
