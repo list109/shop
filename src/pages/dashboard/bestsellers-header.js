@@ -18,6 +18,25 @@ const header = [
     sortType: 'string'
   },
   {
+    id: 'subcategory',
+    title: 'Category',
+    sortable: false,
+    sortType: 'number',
+    template: data => {
+      const { title: subTitle } = data
+      const { title: catTitle } = data.category
+
+      const tooltip = `
+      <div class=&quot;sortable-table-tooltip&quot;>
+        <span class=&quot;sortable-table-tooltip__category&quot;>${catTitle}</span> /
+        <b class=&quot;sortable-table-tooltip__subcategory&quot;>${subTitle}</b>
+      </div>`
+
+      return `<td class="sortable-table__cell">
+      <span data-tooltip="${tooltip}">${subTitle}</span></td>`
+    }
+  },
+  {
     id: 'quantity',
     title: 'Quantity',
     sortable: true,
