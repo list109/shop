@@ -7,7 +7,7 @@ export default class ColumnChart {
   chartHeight = 50
   data = []
 
-  calculateValue = data => data.reduce((accum, item) => accum + item, 0)
+  calculateValue = data => data.reduce((accum, item) => accum + item, 0).toLocaleString('en')
 
   onChartPointerOver = ({ target }) => {
     const { body } = this.subElements
