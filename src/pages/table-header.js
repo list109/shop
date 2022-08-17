@@ -6,7 +6,7 @@ const header = [
     template: data => {
       return `
           <td class="sortable-table__cell">
-            <img class="sortable-table-image" alt="Image" src="${data[0].url}">
+            <img class="sortable-table-image" alt="Image" src="${data[0]?.url}">
           </td>
         `
     }
