@@ -150,5 +150,7 @@ export default class ColumnChart {
 
   destroy() {
     this.element.remove()
+    this.element = null
+    this.subElements = null
   }
 }

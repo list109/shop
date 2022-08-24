@@ -25,7 +25,6 @@ export default class RangeSlider {
     this.element.classList.remove('range-slider_dragging')
     document.removeEventListener('pointermove', this.onDragging)
     document.removeEventListener('pointerup', this.onPointerUp)
-
     this.element.dispatchEvent(
       new CustomEvent('slider-change', {
         bubbles: true,
@@ -147,5 +146,7 @@ export default class RangeSlider {
 
   destroy() {
     this.element.remove()
+    this.element = null
+    this.subElements = {}
   }
 }

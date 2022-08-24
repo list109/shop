@@ -155,7 +155,6 @@ export default class SortableTable {
   ) {
     this.isDataOnServer = true
     this.setParams(url, queryParams)
-
     let data
 
     try {
@@ -171,7 +170,7 @@ export default class SortableTable {
   setParams(url, queryParams = {}) {
     Object.keys(queryParams).forEach(param => {
       const value = queryParams[param]
-      url.searchParams[value ? 'set' : 'delete'](param, value)
+      url.searchParams[value === '' || value === undefined ? 'delete' : 'set'](param, value)
     })
   }
 
@@ -373,6 +372,7 @@ export default class SortableTable {
 
   destroy() {
     this.remove()
+    this.element = null
     this.subElements = {}
   }
 }
