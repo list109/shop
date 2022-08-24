@@ -9,7 +9,8 @@ const generateResponse = length => {
       title: `${i + 1} - Really Goog Thing`,
       status: 1,
       quantity: 187 + i,
-      price: 220 + i
+      price: 220 + i,
+      subcategory: { title: 'subcategory', category: { title: 'category' } }
     })
   }
 
