@@ -29,10 +29,6 @@
   align-items: center;
 }
 
-.products-list .products-list__container {
-  height: 100%;
-}
-
 .products-list .products-empty {
   background: var(--grey-extra-light);
   border: 1px solid var(--grey-light);

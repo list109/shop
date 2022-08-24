@@ -1,8 +1,8 @@
 import SortableTable from '../../../components/sortable-table/index.js'
 import RangeSlider from '../../../components/range-slider/index.js'
-import header from './products-list-header'
+import header from '../../table-header.js'
 
-export default class Products {
+export default class List {
   element
   subElements = {}
   components = {}
@@ -86,7 +86,7 @@ export default class Products {
     this.element = wrapper.firstElementChild
     this.subElements = this.getSubElements(this.element)
 
-    await this.initComponent()
+    this.initComponent()
 
     this.renderComponents()
 

@@ -1,7 +1,7 @@
 import RangePicker from '../../components/range-picker/index.js'
 import SortableTable from '../../components/sortable-table/index.js'
 import ColumnChart from '../../components/column-chart/index.js'
-import header from './bestsellers-header.js'
+import header from '../table-header.js'
 
 export default class Page {
   element
@@ -18,7 +18,7 @@ export default class Page {
     this.components.customersChart.update({ from, to })
   }
 
-  async initComponents() {
+  initComponents() {
     const to = new Date()
     const from = new Date(to.getTime() - 30 * 24 * 60 * 60 * 1000)
 
@@ -100,7 +100,7 @@ export default class Page {
     this.element = element.firstElementChild
     this.subElements = this.getSubElements(this.element)
 
-    await this.initComponents()
+    this.initComponents()
 
     this.renderComponents()
     this.initEventListeners()
