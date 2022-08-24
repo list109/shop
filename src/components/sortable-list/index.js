@@ -72,7 +72,9 @@ export default class SortableList {
   }
 
   onPointerDown(event) {
-    if (event.which !== 1) {
+    if (this.draggingElem) return
+
+    if (event.button !== 1) {
       // must be left-button
       return false
     }
@@ -101,12 +103,11 @@ export default class SortableList {
       x: clientX - itemElem.getBoundingClientRect().x,
       y: clientY - itemElem.getBoundingClientRect().y
     }
-
     this.draggingElem = itemElem
 
     this.placeholderElem = document.createElement('li')
     this.placeholderElem.className = 'sortable-list__placeholder'
-
+    this.placeholderElem.dataset.testid = 'placeholder'
     // itemElem will get position:fixed
     // so its width will be auto-set to fit the parent container
     itemElem.style.width = `${itemElem.offsetWidth}px`
@@ -173,7 +174,7 @@ export default class SortableList {
       this.element.dispatchEvent(
         new CustomEvent('sortable-list-reorder', {
           bubbles: true,
-          details: {
+          detail: {
             from: this.elementInitialIndex,
             to: placeholderIndex
           }
@@ -190,5 +191,6 @@ export default class SortableList {
 
   destroy() {
     this.remove()
+    this.element = null
   }
 }
