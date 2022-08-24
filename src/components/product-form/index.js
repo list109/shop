@@ -72,89 +72,105 @@ export default class ProductForm {
     return `
       <div class="product-form">
 
-      <form data-element="productForm" class="form-grid">
+      <form role="form" data-element="productForm" class="form-grid">
         <div class="form-group form-group__half_left">
           <fieldset>
-            <label class="form-label">Название товара</label>
-            <input required
-              id="title"
-              value=""
-              type="text"
-              name="title"
-              class="form-control"
-              placeholder="Название товара">
+            <label class="form-label" for="title">Product's name</label>
+            <p class="required">
+              <input required
+                id="title"
+                value=""
+                type="text"
+                name="title"
+                class="form-control"
+                placeholder="Product's name"
+                data-testid="title">
+            </p>
           </fieldset>
         </div>
 
         <div class="form-group form-group__wide">
-          <label class="form-label">Описание</label>
-          <textarea required
-            id="description"
-            class="form-control"
-            name="description"
-            placeholder="Описание товара"></textarea>
+          <label class="form-label" for="description">Description</label>
+          <p class="required">
+            <textarea required
+              id="description"
+              class="form-control"
+              name="description"
+              placeholder="Product's description"
+              data-testid="description"></textarea>
+          </p>
         </div>
 
         <div class="form-group form-group__wide">
-          <label class="form-label">Фото</label>
+          <label class="form-label">Photo</label>
 
           <div data-element="imageListContainer"></div>
 
           <button data-element="uploadImage" type="button" class="button-primary-outline">
-            <span>Загрузить</span>
+            <span>Upload</span>
           </button>
         </div>
 
         <div class="form-group form-group__half_left">
-          <label class="form-label">Категория</label>
+          <label class="form-label" for="subcategory">Category</label>
             ${this.createCategoriesSelect()}
         </div>
 
         <div class="form-group form-group__half_left form-group__two-col">
           <fieldset>
-            <label class="form-label">Цена ($)</label>
-            <input required
-              id="price"
-              value=""
-              type="number"
-              name="price"
-              class="form-control"
-              placeholder="${this.defaultFormData.price}">
+            <label class="form-label" for="price">Price ($)</label>
+            <p class="required">
+              <input required
+                id="price"
+                value=""
+                type="number"
+                name="price"
+                class="form-control"
+                placeholder="${this.defaultFormData.price}"
+                data-testid="price">
+            </p>
           </fieldset>
           <fieldset>
-            <label class="form-label">Скидка ($)</label>
-            <input required
-              id="discount"
-              value=""
-              type="number"
-              name="discount"
-              class="form-control"
-              placeholder="${this.defaultFormData.discount}">
+            <label class="form-label" for="discount">Discount ($)</label>
+            <p class="required">
+              <input required
+                id="discount"
+                value=""
+                type="number"
+                name="discount"
+                class="form-control"
+                placeholder="${this.defaultFormData.discount}"
+                data-testid="discount">
+            </p>
           </fieldset>
         </div>
 
         <div class="form-group form-group__part-half">
-          <label class="form-label">Количество</label>
-          <input required
-            id="quantity"
-            value=""
-            type="number"
-            class="form-control"
-            name="quantity"
-            placeholder="${this.defaultFormData.quantity}">
+          <label class="form-label" for="quantity">Quantity</label>
+          <p class="required">
+            <input required
+              id="quantity"
+              value=""
+              type="number"
+              class="form-control"
+              name="quantity"
+              placeholder="${this.defaultFormData.quantity}"
+              data-testid="quantity">
+          </p>
         </div>
 
         <div class="form-group form-group__part-half">
-          <label class="form-label">Статус</label>
-          <select id="status" class="form-control" name="status">
-            <option value="1">Активен</option>
-            <option value="0">Неактивен</option>
-          </select>
+          <label class="form-label" for="status">Status</label>
+          
+            <select id="status" class="form-control" name="status" data-testid="status">
+              <option value="1">Active</option>
+              <option value="0">Unactive</option>
+            </select>
         </div>
 
         <div class="form-buttons">
           <button type="submit" name="save" class="button-primary-outline">
-            ${this.productId ? 'Сохранить' : 'Добавить'} товар
+            ${this.productId ? 'Save' : 'Add'} the product
           </button>
         </div>
       </form>
@@ -175,16 +191,18 @@ export default class ProductForm {
     this.categories = categoriesData
 
     this.renderForm()
-    this.setFormData()
-    this.createImagesList()
-    this.initEventListeners()
+
+    if (this.subElements.productForm) {
+      this.setFormData()
+      this.createImagesList()
+      this.initEventListeners()
+    }
 
     return this.element
   }
 
   renderForm() {
     const element = document.createElement('div')
-
     element.innerHTML = this.formData ? this.template() : this.getEmptyTemplate()
 
     this.element = element.firstElementChild
@@ -193,8 +211,8 @@ export default class ProductForm {
 
   getEmptyTemplate() {
     return `<div>
-      <h1 class="page-title">Страница не найдена</h1>
-      <p>Извините, данный товар не существует</p>
+      <h1 class="page-title">the Page has not been found</h1>
+      <p>Sorry, but it seems the given product does not exist</p>
     </div>`
   }
 
@@ -272,7 +290,8 @@ export default class ProductForm {
   createCategoriesSelect() {
     const wrapper = document.createElement('div')
 
-    wrapper.innerHTML = '<select class="form-control" id="subcategory" name="subcategory"></select>'
+    wrapper.innerHTML =
+      '<select class="form-control" id="subcategory" name="subcategory" data-testid="subcategory"></select>'
 
     const select = wrapper.firstElementChild
 
@@ -313,15 +332,15 @@ export default class ProductForm {
     const wrapper = document.createElement('div')
 
     wrapper.innerHTML = `
-      <li class="products-edit__imagelist-item sortable-list__item">
+      <li class="products-edit__image-list-item sortable-list__item">
         <span>
-          <img src="icon-grab.svg" data-grab-handle alt="grab">
+          <img src="../icon-grab.svg" data-grab-handle alt="grab">
           <img class="sortable-table__cell-img" alt="${escapeHtml(name)}" src="${escapeHtml(url)}">
-          <span>${escapeHtml(name)}</span>
+          <span class="sortable-list__item-title">${escapeHtml(name)}</span>
         </span>
 
         <button type="button">
-          <img src="icon-trash.svg" alt="delete" data-delete-handle>
+          <img src="../icon-trash.svg" alt="delete" data-delete-handle>
         </button>
       </li>`
 
@@ -338,7 +357,7 @@ export default class ProductForm {
   destroy() {
     this.remove()
     this.element = null
-    this.subElements = null
+    this.subElements = {}
   }
 
   remove() {
