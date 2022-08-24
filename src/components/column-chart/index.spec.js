@@ -7,7 +7,7 @@ import fetchJson from '../../utils/fetch-json.js'
 import { stringToDate } from '../../utils/string-to-date.js'
 import { getUrlObject } from '../../utils/get-url-object.js'
 
-const BACKEND_URL = `${HOST}/api/dashboard/orders`
+const BACKEND_URL = `${HOST}api/dashboard/orders`
 
 const getColumnChart = prepareForDom(obj => new ColumnChart({ ...obj }))
 
@@ -16,8 +16,9 @@ function setup({ url, from, to, ...rest } = {}) {
   const columnChart = getColumnChart({ url: stuff.url, ...rest })
   columnChart.render()
   const container = screen.getByTestId('column-chart-container')
+  const { element } = columnChart
 
-  return { columnChart, container, ...stuff }
+  return { columnChart, container, element, ...stuff }
 }
 
 function update(obj) {
@@ -40,6 +41,15 @@ async function getTotalValue(url) {
   return Object.values(data).reduce((acc, i) => acc + i, 0)
 }
 
+const waitLoading = element => {
+  return waitFor(() => {
+    if (element.classList.contains('column-chart_loading') === false) {
+      return true
+    }
+    throw new Error('not loaded')
+  })
+}
+
 describe('ColumnChart', () => {
   beforeAll(() => server.listen())
 
@@ -49,18 +59,22 @@ describe('ColumnChart', () => {
 
   afterAll(() => server.close())
 
-  it('should be in the document', () => {
-    const { columnChart } = setup()
+  it('should be in the document', async () => {
+    const { columnChart, element } = setup()
 
     expect(screen.getByRole('figure')).toBeInTheDocument()
+
+    await waitLoading(element)
 
     columnChart.clear()
   })
 
-  it('should have a specified label', () => {
-    const { columnChart } = setup({ label: 'Total orders' })
+  it('should have a specified label', async () => {
+    const { columnChart, element } = setup({ label: 'Total orders' })
 
     expect(screen.getByRole('figure')).toHaveAccessibleName(/^Total orders/)
+
+    await waitLoading(element)
 
     columnChart.clear()
   })
@@ -89,7 +103,7 @@ describe('ColumnChart', () => {
 
     const output = await screen.findByRole('status')
 
-    expect(output).toHaveTextContent(totalValue)
+    expect(output).toHaveTextContent(totalValue.toLocaleString('en'))
 
     const { url: newUrl, from, to } = update({ from: '2019/5/15', to: '2019/7/8' })
     const newTotalValue = await getTotalValue(newUrl)
@@ -97,7 +111,7 @@ describe('ColumnChart', () => {
     await columnChart.instance.update({ from, to })
 
     expect(output).not.toHaveTextContent(totalValue)
-    expect(output).toHaveTextContent(newTotalValue)
+    expect(output).toHaveTextContent(newTotalValue.toLocaleString('en'))
 
     columnChart.clear()
   })

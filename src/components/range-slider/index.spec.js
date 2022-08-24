@@ -14,18 +14,18 @@ function setup(obj) {
   const to = screen.getByTestId('to')
   const from = screen.getByTestId('from')
   const user = userEvent.setup()
+  const { element } = rangeSlider
 
-  return { rangeSlider, thumbLeft, thumbRight, inner, to, from, user }
+  return { rangeSlider, element, thumbLeft, thumbRight, inner, to, from, user }
 }
 
 describe('RangeSlider', () => {
   afterEach(() => (document.body.innerHTML = ''))
 
   it('should be in the document', () => {
-    const rangeSlider = getRangeSlider({ max: 4000 })
-    rangeSlider.render()
+    const { rangeSlider, element } = setup({ max: 4000 })
 
-    expect(rangeSlider.element).toBeInTheDocument()
+    expect(element).toBeInTheDocument()
 
     rangeSlider.clear()
   })
@@ -47,6 +47,7 @@ describe('RangeSlider', () => {
 
     await user.pointer({ keys: '[MouseLeft>]', target: thumbRight })
     expect(rangeSlider.element).toHaveClass('range-slider_dragging')
+    await user.pointer('[/MouseLeft]')
 
     rangeSlider.clear()
   })
@@ -60,6 +61,7 @@ describe('RangeSlider', () => {
     await user.pointer({ keys: '[MouseLeft>]', target: thumbLeft, coords: { clientX: 98 } })
     await user.pointer({ target: inner, coords: { clientX: 248 } })
     expect(from).toHaveTextContent(rangeSlider.instance.max / 2)
+    await user.pointer('[/MouseLeft]')
 
     rangeSlider.clear()
   })
@@ -73,6 +75,7 @@ describe('RangeSlider', () => {
     await user.pointer({ keys: '[MouseLeft>]', target: thumbRight, coords: { clientX: 404 } })
     await user.pointer({ target: inner, coords: { clientX: 254 } })
     expect(to).toHaveTextContent(rangeSlider.instance.max / 2)
+    await user.pointer('[/MouseLeft]')
 
     rangeSlider.clear()
   })
@@ -86,6 +89,7 @@ describe('RangeSlider', () => {
     await user.pointer({ keys: '[MouseLeft>]', target: thumbLeft, coords: { clientX: 98 } })
     await user.pointer({ coords: { clientX: 50 } })
     expect(from).toHaveTextContent(0)
+    await user.pointer('[/MouseLeft]')
 
     rangeSlider.clear()
   })
@@ -99,6 +103,7 @@ describe('RangeSlider', () => {
     await user.pointer({ keys: '[MouseLeft>]', target: thumbLeft, coords: { clientX: 98 } })
     await user.pointer({ coords: { clientX: 500 } })
     expect(from).toHaveTextContent(rangeSlider.instance.max / 2)
+    await user.pointer('[/MouseLeft]')
 
     rangeSlider.clear()
   })
@@ -112,6 +117,7 @@ describe('RangeSlider', () => {
     await user.pointer({ keys: '[MouseLeft>]', target: thumbRight, coords: { clientX: 404 } })
     await user.pointer({ coords: { clientX: 450 } })
     expect(to).toHaveTextContent(rangeSlider.instance.max)
+    await user.pointer('[/MouseLeft]')
 
     rangeSlider.clear()
   })
@@ -125,6 +131,7 @@ describe('RangeSlider', () => {
     await user.pointer({ keys: '[MouseLeft>]', target: thumbRight, coords: { clientX: 404 } })
     await user.pointer({ coords: { clientX: 50 } })
     expect(to).toHaveTextContent(rangeSlider.instance.max / 2)
+    await user.pointer('[/MouseLeft]')
 
     rangeSlider.clear()
   })
@@ -143,6 +150,7 @@ describe('RangeSlider', () => {
     await user.pointer({ keys: '[MouseLeft>]', target: thumbRight, coords: { clientX: 240 } })
 
     expect(from.toHaveTextContent).toEqual(to.toHaveTextContent)
+    await user.pointer('[/MouseLeft]')
 
     rangeSlider.clear()
   })
@@ -164,6 +172,7 @@ describe('RangeSlider', () => {
     const total = parseInt(to.textContent, 10) + parseInt(from.textContent, 10)
     expect(total).toEqual(rangeSlider.instance.max)
 
+    await user.pointer('[/MouseLeft]')
     rangeSlider.clear()
   })
 })

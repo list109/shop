@@ -3,9 +3,9 @@ import { prepareForDom } from '../../utils/prepare-for-dom.js'
 import { server } from '../../mocks/server/server.js'
 import userEvent from '@testing-library/user-event'
 import SortableTable from './index.js'
-import header from '../../pages/dashboard/bestsellers-header.js'
+import header from '../../pages/table-header.js'
 
-const BACKEND_URL = `${HOST}/api/dashboard/bestsellers`
+const BACKEND_URL = `${HOST}api/dashboard/bestsellers`
 
 const getSortableTable = prepareForDom(
   obj => new SortableTable(header, { step: 20, start: 1, end: 21, ...obj })
@@ -15,6 +15,7 @@ function setup({ url = BACKEND_URL, ...rest } = {}) {
   const sortableTable = getSortableTable({ url, ...rest })
   sortableTable.render()
 
+  const { element } = sortableTable
   const thead = screen.getByTestId('thead')
   const tbody = screen.getByTestId('tbody')
   const container = screen.getByTestId('container')
@@ -22,7 +23,7 @@ function setup({ url = BACKEND_URL, ...rest } = {}) {
   const thElements = within(thead).getAllByRole('columnheader')
   const user = userEvent.setup()
 
-  return { sortableTable, thead, thElements, tbody, container, placeholder, user }
+  return { sortableTable, element, thead, thElements, tbody, container, placeholder, user }
 }
 
 const waitLoading = element => {
@@ -44,21 +45,21 @@ describe('SortableTable', () => {
   afterAll(() => server.close())
 
   it('should be in the document', async () => {
-    const { sortableTable } = setup()
+    const { sortableTable, element } = setup()
 
     expect(screen.getByRole('grid')).toBeInTheDocument()
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     sortableTable.clear()
   })
 
   it('should render the exact quantity of head columns', async () => {
-    const { sortableTable, thElements } = setup()
+    const { sortableTable, thElements, element } = setup()
 
     expect(thElements).toHaveLength(header.length)
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     sortableTable.clear()
   })
@@ -85,9 +86,9 @@ describe('SortableTable', () => {
   })
 
   it('should sort locally', async () => {
-    const { sortableTable, user, tbody, thead } = setup({ isSortLocally: true })
+    const { sortableTable, user, tbody, thead, element } = setup({ isSortLocally: true })
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     for (let i = 0; i < header.length; i++) {
       const { sortable, title } = header[i]
@@ -126,9 +127,9 @@ describe('SortableTable', () => {
   })
 
   it('should sort on the server', async () => {
-    const { sortableTable, user, tbody, thead } = setup({ isSortLocally: false })
+    const { sortableTable, user, tbody, thead, element } = setup({ isSortLocally: false })
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     for (let i = 0; i < header.length; i++) {
       const { sortable, title } = header[i]
@@ -140,7 +141,7 @@ describe('SortableTable', () => {
 
       await user.click(th)
 
-      await waitLoading(sortableTable.element)
+      await waitLoading(element)
 
       let rows = within(tbody).getAllByRole('row')
       let firstRow = rows[0]
@@ -154,7 +155,7 @@ describe('SortableTable', () => {
 
       await user.click(th)
 
-      await waitLoading(sortableTable.element)
+      await waitLoading(element)
 
       rows = within(tbody).getAllByRole('row')
       firstRow = rows[0]
@@ -171,14 +172,14 @@ describe('SortableTable', () => {
   })
 
   it('shoud have no ways to sort while loading', async () => {
-    const { sortableTable, user, thElements } = setup({ isSortLocally: false })
+    const { sortableTable, user, thElements, element } = setup({ isSortLocally: false })
 
     const sortableHeaders = thElements.filter(({ dataset }) => dataset.sortable === 'true')
 
     // //first loading
     sortableHeaders.forEach(th => expect(th).toHaveAttribute('aria-disabled', 'true'))
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     sortableHeaders.forEach(th => expect(th).toHaveAttribute('aria-disabled', 'false'))
 
@@ -187,7 +188,7 @@ describe('SortableTable', () => {
 
     sortableHeaders.forEach(th => expect(th).toHaveAttribute('aria-disabled', 'true'))
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     sortableHeaders.forEach(th => expect(th).toHaveAttribute('aria-disabled', 'false'))
 
@@ -198,7 +199,7 @@ describe('SortableTable', () => {
 
     sortableHeaders.forEach(th => expect(th).toHaveAttribute('aria-disabled', 'true'))
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     sortableHeaders.forEach(th => expect(th).toHaveAttribute('aria-disabled', 'false'))
 
@@ -218,9 +219,9 @@ describe('SortableTable', () => {
   })
 
   it('should indicate loading while data is being updating', async () => {
-    const { sortableTable, container } = setup()
+    const { sortableTable, container, element } = setup()
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     sortableTable.instance.update()
 
@@ -265,7 +266,7 @@ describe('SortableTable', () => {
   })
 
   it('should have no body rows when there is loading new data', async () => {
-    const { sortableTable, tbody, container, user } = setup({ isSortLocally: false })
+    const { sortableTable, tbody, container, user, element } = setup({ isSortLocally: false })
     const name = header.find(({ sortable }) => sortable === true).title
     const sortableTh = screen.getByRole('columnheader', { name })
 
@@ -273,7 +274,7 @@ describe('SortableTable', () => {
     expect(tbody.trim()).toBeEmptyDOMElement()
     expect(container).toHaveClass('sortable-table_loading')
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     expect(within(tbody).queryAllByRole('row')).not.toHaveLength(0)
 
@@ -283,7 +284,7 @@ describe('SortableTable', () => {
     expect(tbody.trim()).toBeEmptyDOMElement()
     expect(container).toHaveClass('sortable-table_loading')
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     expect(within(tbody).queryAllByRole('row')).not.toHaveLength(0)
 
@@ -294,7 +295,7 @@ describe('SortableTable', () => {
 
     expect(container).toHaveClass('sortable-table_loading')
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     expect(within(tbody).queryAllByRole('row')).not.toHaveLength(0)
 
@@ -302,9 +303,9 @@ describe('SortableTable', () => {
   })
 
   it('should have body rows while loading extra data', async () => {
-    const { sortableTable, tbody, container } = setup()
+    const { sortableTable, tbody, container, element } = setup()
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     expect(within(tbody).queryAllByRole('row')).not.toHaveLength(0)
 
@@ -318,7 +319,7 @@ describe('SortableTable', () => {
 
     expect(within(tbody).queryAllByRole('row')).not.toHaveLength(0)
 
-    await waitLoading(sortableTable.element)
+    await waitLoading(element)
 
     sortableTable.clear()
   })
