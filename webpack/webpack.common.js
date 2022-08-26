@@ -1,15 +1,16 @@
-require('dotenv/config');
+require('dotenv/config')
 
-const path = require('path');
-const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const path = require('path')
+const webpack = require('webpack')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
-const jsLoaders = require('./loaders/js-loaders');
-const cssLoaders = require('./loaders/css-loaders');
-const fontLoaders = require('./loaders/font-loaders');
-const imageLoaders = require('./loaders/image-loaders');
+const jsLoaders = require('./loaders/js-loaders')
+const cssLoaders = require('./loaders/css-loaders')
+const fontLoaders = require('./loaders/font-loaders')
+const imageLoaders = require('./loaders/image-loaders')
+const urlLoaders = require('./loaders/url-loaders')
 
 module.exports = {
   target: 'web',
@@ -26,7 +27,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(png|jpe?g|gif|svg)$/i,
+        test: /\.(svg)$/i,
+        use: urlLoaders
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
         use: imageLoaders
       },
       {
@@ -58,7 +63,7 @@ module.exports = {
       // Options similar to the same options in webpackOptions.output
       // both options are optional
       filename: '[name].css',
-      chunkFilename: '[id].css',
+      chunkFilename: '[id].css'
     }),
     new CopyWebpackPlugin([
       {
@@ -70,4 +75,4 @@ module.exports = {
       }
     ])
   ]
-};
+}
