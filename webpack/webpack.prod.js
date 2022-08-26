@@ -1,8 +1,8 @@
-const path = require('path');
-const merge = require('webpack-merge');
-const common = require('./webpack.common.js');
-const TerserPlugin = require('terser-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const path = require('path')
+const merge = require('webpack-merge')
+const common = require('./webpack.common.js')
+const TerserPlugin = require('terser-webpack-plugin')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 module.exports = merge(common, {
   mode: 'production',
@@ -34,4 +34,4 @@ module.exports = merge(common, {
       analyzerMode: 'static'
     })
   ]
-});
+})
