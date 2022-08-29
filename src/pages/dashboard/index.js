@@ -36,7 +36,8 @@ export default class Page {
       isSortLocally: true,
       start: 1,
       end: 21,
-      step: 20
+      step: 20,
+      label: 'Best sellers'
     })
 
     const chartUrl = `${

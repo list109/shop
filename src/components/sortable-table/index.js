@@ -110,7 +110,8 @@ export default class SortableTable {
       step = 20,
       start = 1,
       end = start + step,
-      placeholder
+      placeholder,
+      label = ''
     } = {}
   ) {
     this.headersConfig = headersConfig
@@ -121,6 +122,7 @@ export default class SortableTable {
     this.start = start
     this.end = end
     this.placeholder = placeholder
+    this.label = label
 
     this.render()
   }

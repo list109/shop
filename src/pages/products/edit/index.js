@@ -38,7 +38,9 @@ export default class Edit {
 
   initComponents() {
     const productId = location.pathname.split('/').slice(-1)[0]
-    const productForm = new ProductForm(productId)
+    const productForm = new ProductForm(productId === 'add' ? null : productId, {
+      label: 'Product form'
+    })
 
     this.components.productForm = productForm
   }

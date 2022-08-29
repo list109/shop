@@ -64,8 +64,9 @@ export default class ProductForm {
     fileInput.click()
   }
 
-  constructor(productId) {
+  constructor(productId, { label }) {
     this.productId = productId
+    this.label = label
   }
 
   template() {
