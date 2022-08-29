@@ -95,23 +95,29 @@
   cursor: pointer;
 }
 
-.sortable-table_empty {
+.sortable-table_empty,
+.sortable-table_error {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.sortable-table__empty-placeholder p {
+.sortable-table__empty-placeholder p,
+.sortable-table__error-message p {
   margin: 0;
 }
 
 .sortable-table__empty-placeholder,
-.sortable-table_empty .sortable-table__header {
+.sortable-table__error-message,
+.sortable-table_empty .sortable-table__header,
+.sortable-table_error .sortable-table__header {
   display: none;
 }
 
 .dashboard .sortable-table_empty .sortable-table__empty-placeholder,
-.sortable-table_empty .sortable-table__empty-placeholder {
+.dashboard .sortable-table_error .sortable-table__error-message,
+.sortable-table_empty .sortable-table__empty-placeholder,
+.sortable-table_error .sortable-table__error-message {
   background: var(--grey-extra-light);
   border: 1px solid var(--grey-light);
   border-radius: 4px;

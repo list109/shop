@@ -48,7 +48,6 @@
   border-radius: 4px;
   border-left: 2px solid var(--chart-column-color);
   position: relative;
-
   margin: 0;
 }
 
@@ -75,6 +74,15 @@
   margin-bottom: 28px;
   margin-top: 0;
   position: relative;
+}
+
+.column-chart_error .column-chart__header {
+  font-weight: 400;
+  font-size: 18px;
+  line-height: initial;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .column-chart_loading .column-chart__header,
