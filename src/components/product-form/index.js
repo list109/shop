@@ -85,7 +85,7 @@ export default class ProductForm {
     return `
       <div class="product-form">
 
-      <form role="form" data-element="productForm" class="form-grid">
+      <form role="form" data-elem="productForm" class="form-grid">
         <div class="form-group form-group__half_left">
           <fieldset>
             <label class="form-label" for="title">Product's name</label>
@@ -117,9 +117,9 @@ export default class ProductForm {
         <div class="form-group form-group__wide">
           <label class="form-label">Photo</label>
 
-          <div data-element="imageListContainer"></div>
+          <div data-elem="imageListContainer"></div>
 
-          <button data-element="uploadImage" type="button" class="button-primary-outline">
+          <button data-elem="uploadImage" type="button" class="button-primary-outline">
             <span>Upload</span>
           </button>
         </div>
@@ -360,10 +360,10 @@ export default class ProductForm {
 
   getSubElements(element) {
     const subElements = {}
-    const elements = element.querySelectorAll('[data-element]')
+    const elements = element.querySelectorAll('[data-elem]')
 
     for (const item of elements) {
-      subElements[item.dataset.element] = item
+      subElements[item.dataset.elem] = item
     }
 
     return subElements
