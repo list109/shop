@@ -1,6 +1,7 @@
 import fetchJson from '../../utils/fetch-json.js'
 import getUniqueId from '../../utils/create-unique-id'
 import { stringToDate } from '../../utils/string-to-date'
+import * as notifications from '../notification/index.js'
 
 export default class ColumnChart {
   element
@@ -53,7 +54,16 @@ export default class ColumnChart {
     this.element.classList.add('column-chart_loading')
     this.subElements.container.setAttribute('aria-hidden', 'true')
 
-    const data = await fetchJson(this.url)
+    let data
+
+    try {
+      data = await fetchJson(this.url)
+    } catch (err) {
+      new notifications.OnError(
+        `${this.label}${this.label.endsWith('chart') ? '' : ' chart'}: (${err.message})`
+      )
+      data = null
+    }
 
     this.element.classList.remove('column-chart_loading')
     this.subElements.container.setAttribute('aria-hidden', 'false')
@@ -108,7 +118,7 @@ export default class ColumnChart {
         <div data-elem="container" class="column-chart__container" data-testid="column-chart-container" 
         aria-hidden="false">
           <p class="column-chart__header">
-            ${this.valuePrefix}<output data-elem="output">${this.calculateValue([])}</output>
+            <output data-elem="output"></output>
           </p>
           <ul data-elem="body" class="column-chart__chart">
           </ul>
@@ -136,10 +146,16 @@ export default class ColumnChart {
   }
 
   rerender(data) {
+    if (data === null) {
+      this.element.classList.add('column-chart_error')
+      this.subElements.output.textContent = 'No data has been loaded'
+      return
+    }
+
     const dates = Object.keys(data)
     const values = Object.values(data)
 
-    this.subElements.output.textContent = this.calculateValue(values)
+    this.subElements.output.innerHTML = `${this.valuePrefix}${this.calculateValue(values)}`
     this.subElements.body.innerHTML = this.getColumnBody(dates, values)
   }
 

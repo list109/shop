@@ -1,4 +1,5 @@
 import fetchJson from '../../utils/fetch-json.js'
+import * as notifications from '../notification/index.js'
 
 export default class SortableTable {
   element
@@ -48,6 +49,11 @@ export default class SortableTable {
 
       if (this.loadType !== 'onscroll') return
       this.loadType = null
+
+      if (data === undefined) {
+        this.renderRows()
+        return
+      }
 
       if (data.length < 1) this.isDataOnServer = false
 
@@ -162,11 +168,13 @@ export default class SortableTable {
     try {
       data = await fetchJson(url)
     } catch (err) {
-      this.element.dispatchEvent(new CustomEvent('error', { detail: err }))
-      data = []
+      new notifications.OnError(
+        `${this.label && `${this.label}: `}Could not load data: (${err.message})`
+      )
+      return
     }
 
-    return data
+    return data || []
   }
 
   setParams(url, queryParams = {}) {
@@ -282,7 +290,6 @@ export default class SortableTable {
   getTable() {
     return `
       <div class="sortable-table" data-testid="container">
-      
         <table class="sortable-table__table" role="grid">
           ${this.getTableHeader()}
           ${this.getTableBody(this.data)}
@@ -294,7 +301,9 @@ export default class SortableTable {
           ${this.placeholder || '<p>No products</p>'}
         </div>
 
-
+        <div data-elem="errorMessage" class="sortable-table__error-message" data-testid="errorMessage">
+          <p>No data has been loaded</p>
+        </div>
       </div>`
   }
 
@@ -329,7 +338,12 @@ export default class SortableTable {
   }
 
   renderRows(data) {
+    if (data === undefined) {
+      this.element.classList.add('sortable-table_error')
+      return
+    }
     if (data.length) {
+      this.element.classList.remove('sortable-table_error')
       this.element.classList.remove('sortable-table_empty')
       this.addRows(data)
     } else {

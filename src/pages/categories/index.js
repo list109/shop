@@ -1,11 +1,32 @@
 import fetchJson from '../../utils/fetch-json.js'
 import SortableList from '../../components/sortable-list/index.js'
+import * as notifications from '../../components/notification/index.js'
 
 export default class Categories {
   components = []
 
   onHeaderClick(header) {
     header.closest('.category').classList.toggle('category_open')
+  }
+
+  async onReorder(items) {
+    const body = items.reduce((arr, item, i) => {
+      arr.push({ id: item.dataset.id, weight: i + 1 })
+      return arr
+    }, [])
+
+    try {
+      await fetchJson(`${process.env.BACKEND_URL}api/rest/subcategories`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json; charset=utf-8' },
+        body: JSON.stringify(body)
+      })
+    } catch (err) {
+      new notifications.OnError(`Could not send data (${err.message})`)
+      return
+    }
+
+    new notifications.OnSuccess('Category order saved')
   }
 
   async render() {
@@ -25,19 +46,38 @@ export default class Categories {
   }
 
   async loadCategoriesList() {
-    return await fetchJson(
-      `${process.env.BACKEND_URL}api/rest/categories?_sort=weight&_refs=subcategory`
-    )
+    let categories
+
+    try {
+      categories = await fetchJson(
+        `${process.env.BACKEND_URL}api/rest/categories?_sort=weight&_refs=subcategory`
+      )
+    } catch (err) {
+      new notifications.OnError(`Categories page: Could not load data (${err.message})`)
+    }
+
+    return categories
   }
 
   get template() {
-    return `<div class="categories">
+    return `
+    <div class="categories">
       <div class="content__top-panel">
       <h1 class="page-title">Categories</h1>
-      </div>
+      </div>  
+      ${this.data ? this.getBodyTemplate() : this.getErrorTemplate()}
+    </div>`
+  }
+
+  getBodyTemplate() {
+    return `
       <p>Subcategories can be dragged to change their order within the category.</p>
       <div data-elem="categoriesContainer">${this.getCategories(this.data)}</div>
-    </div>`
+    `
+  }
+
+  getErrorTemplate() {
+    return '<p>Could not load data</p>'
   }
 
   getCategories(categories) {
@@ -87,18 +127,10 @@ export default class Categories {
       target.closest('.category__header') && this.onHeaderClick(target)
     })
 
-    this.element.addEventListener('sortable-list-reorder', ({ target: { children } }) => {
-      const body = [...children].reduce((arr, item, i) => {
-        arr.push({ id: item.dataset.id, weight: i + 1 })
-        return arr
-      }, [])
-
-      fetch(`${process.env.BACKEND_URL}api/rest/subcategories`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json; charset=utf-8' },
-        body: JSON.stringify(body)
-      })
-    })
+    this.element.addEventListener(
+      'sortable-list-reorder',
+      ({ target: { children } }) => void this.onReorder([...children])
+    )
   }
 
   destroy() {

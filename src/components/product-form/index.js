@@ -1,6 +1,7 @@
 import SortableList from '../sortable-list/index.js'
 import escapeHtml from '../../utils/escape-html.js'
 import fetchJson from '../../utils/fetch-json.js'
+import * as notifications from '../../components/notification/index.js'
 
 export default class ProductForm {
   element
@@ -40,15 +41,26 @@ export default class ProductForm {
         uploadImage.classList.add('is-loading')
         uploadImage.disabled = true
 
-        const result = await fetchJson('https://api.imgur.com/3/image', {
-          method: 'POST',
-          headers: {
-            Authorization: `Client-ID ${process.env.IMGUR_CLIENT_ID}`
-          },
-          body: formData
-        })
+        let result
 
-        imageListContainer.firstElementChild.append(this.getImageItem(result.data.link, file.name))
+        try {
+          result = await fetchJson('https://api.imgur.com/3/image', {
+            method: 'POST',
+            headers: {
+              Authorization: `Client-ID ${process.env.IMGUR_CLIENT_ID}`
+            },
+            body: formData
+          })
+        } catch (err) {
+          new notifications.OnError(`Could not upload (${err.message})`)
+        }
+
+        if (result && result.data) {
+          imageListContainer.firstElementChild.append(
+            this.getImageItem(result.data.link, file.name)
+          )
+          new notifications.OnSuccess('Uploaded')
+        }
 
         uploadImage.classList.remove('is-loading')
         uploadImage.disabled = false
@@ -180,14 +192,17 @@ export default class ProductForm {
   }
 
   async render() {
-    const categoriesPromise = this.loadCategoriesList()
-    const productPromise = this.productId
-      ? this.loadProductData(this.productId)
-      : Promise.resolve([this.defaultFormData])
+    const dataArray = await this.loadInitialData()
 
-    const [categoriesData, productResponse] = await Promise.all([categoriesPromise, productPromise])
+    if (Boolean(dataArray) === false) {
+      this.renderError()
+      this.element.classList.add('product-form_error')
+      return this.element
+    }
+
+    const [categoriesData, productResponse] = dataArray
+
     const [productData] = productResponse
-
     this.formData = productData
     this.categories = categoriesData
 
@@ -202,30 +217,68 @@ export default class ProductForm {
     return this.element
   }
 
+  async loadInitialData() {
+    const categoriesPromise = this.loadCategoriesList()
+
+    const productPromise = this.productId
+      ? this.loadProductData(this.productId)
+      : Promise.resolve([this.defaultFormData])
+
+    let data
+
+    try {
+      ;[...data] = await Promise.all([categoriesPromise, productPromise])
+    } catch (err) {
+      new notifications.OnError(
+        `${this.label ? `${this.label}: ` : ''}Could not load${
+          this.productId ? ` the product's data (${err.message})` : 'data'
+        }`
+      )
+    }
+
+    return data
+  }
+
   renderForm() {
     const element = document.createElement('div')
+
     element.innerHTML = this.formData ? this.template() : this.getEmptyTemplate()
 
     this.element = element.firstElementChild
-    this.subElements = this.getSubElements(element)
+    this.subElements = this.getSubElements(this.element)
+  }
+
+  renderError() {
+    this.element = document.createElement('div')
+    this.element.innerHTML = `<p>Could not load data</p>`
   }
 
   getEmptyTemplate() {
     return `<div>
-      <h1 class="page-title">the Page has not been found</h1>
+      <h1 class="page-title">Product has not been found</h1>
       <p>Sorry, but it seems the given product does not exist</p>
     </div>`
   }
 
   async save() {
     const product = this.getFormData()
-    const result = await fetchJson(`${process.env.BACKEND_URL}api/rest/products`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(product)
-    })
+
+    let result
+
+    try {
+      result = await fetchJson(`${process.env.BACKEND_URL}api/rest/products`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(product)
+      })
+    } catch (err) {
+      new notifications.OnError(`Could not save (${err.message})`)
+      return
+    }
+
+    new notifications.OnSuccess('Saved')
 
     this.dispatchEvent(result.id)
   }
