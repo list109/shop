@@ -1,4 +1,5 @@
 import renderPage from './render-page.js'
+import { removeCurrentNotification } from '../components/notification/index.js'
 
 // performs routing on all links
 export default class Router {
@@ -61,6 +62,7 @@ export default class Router {
   async changePage(path, match) {
     if (this.page && this.page.destroy) {
       this.page.destroy()
+      removeCurrentNotification()
     }
 
     return await renderPage(path, match)
