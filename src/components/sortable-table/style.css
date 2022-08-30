@@ -16,6 +16,10 @@
   text-decoration: none;
 }
 
+.sales .sortable-table__row {
+  grid: auto-flow / 10% 33% 33% 12% 12%;
+}
+
 .sortable-table__row.bold {
   font-weight: bold;
 }
