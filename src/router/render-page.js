@@ -1,11 +1,23 @@
+import errorLoadingPage from '../pages/errorLoading/index.js'
+import * as notifications from '../components/notification/index.js'
+
 export default async function (path) {
   const main = document.querySelector('main')
 
   main.classList.add('is-loading')
 
-  const { default: Page } = await import(
-    /* webpackChunkName: "[request]" */ `../pages/${path}/index.js`
-  )
+  let Page
+
+  try {
+    const { default: page } = await import(
+      /* webpackChunkName: "[request]" */ `../pages/${path}/index.js`
+    )
+    Page = page
+  } catch (err) {
+    Page = errorLoadingPage
+    new notifications.OnError(`Could not load the page (${err.message})`)
+  }
+
   const page = new Page()
   const element = await page.render()
 
