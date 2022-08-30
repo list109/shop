@@ -87,7 +87,7 @@ export default class SortableTable {
       if (this.isSortLocally) {
         this.sortLocally(id, newOrder)
       } else {
-        this.start = 1
+        this.start = 0
         this.end = this.start + this.step
         this.sortOnServer(id, newOrder, this.start, this.end)
       }
@@ -114,7 +114,7 @@ export default class SortableTable {
       },
       isSortLocally = false,
       step = 20,
-      start = 1,
+      start = 0,
       end = start + step,
       placeholder,
       label = ''
@@ -209,7 +209,7 @@ export default class SortableTable {
 
     this.addRows([])
 
-    this.start = 1
+    this.start = 0
     this.end = this.start + this.step
 
     const data = await this.loadData(this.url, {
