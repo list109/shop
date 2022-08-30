@@ -1,7 +1,7 @@
 import RangePicker from '../../components/range-picker/index.js'
 import SortableTable from '../../components/sortable-table/index.js'
 import ColumnChart from '../../components/column-chart/index.js'
-import header from '../table-header.js'
+import header from '../products-header.js'
 
 export default class Page {
   element

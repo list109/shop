@@ -1,6 +1,6 @@
 import SortableTable from '../../../components/sortable-table/index.js'
 import RangeSlider from '../../../components/range-slider/index.js'
-import header from '../../table-header.js'
+import header from '../../products-header.js'
 
 export default class List {
   element
