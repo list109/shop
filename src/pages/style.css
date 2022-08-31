@@ -218,3 +218,18 @@
 .main.is-loading .progress-bar {
   display: block;
 }
+
+.notification-container {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: flex-end;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  max-width: min(75vh, 100vw);
+  z-index: 10000;
+}
+
+.notification-container > *:not(:first-child) {
+  margin-bottom: 20px;
+}

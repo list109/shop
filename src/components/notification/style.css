@@ -123,15 +123,12 @@
 /* new styles */
 
 .notification {
+  display: block;
   background-color: var(--black);
   opacity: 0.8;
   border-radius: 4px;
   -webkit-animation: fadeOut 0.3s linear;
   animation: fadeOut 0.3s linear;
-  display: none;
-  position: fixed;
-  right: 75px;
-  bottom: 75px;
 }
 
 .notification.show {
@@ -188,5 +185,23 @@
   }
   to {
     opacity: 0;
+  }
+}
+
+@-webkit-keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.8;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.8;
   }
 }

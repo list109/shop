@@ -1,15 +1,15 @@
-let currentNotificationInstance
+let currentNotificationInstances = []
 
 export default class Notification {
   onClose = ({ target }) => {
-    target.classList.contains('close') && this.remove()
+    target.classList.contains('close') && this.close()
   }
 
   constructor({ message, status, timer }) {
     this.message = message
     this.status = status
-    currentNotificationInstance && currentNotificationInstance.close()
-    currentNotificationInstance = this
+
+    currentNotificationInstances.push(this)
 
     this.render()
 
@@ -25,7 +25,7 @@ export default class Notification {
     const wrapper = document.createElement('div')
     wrapper.innerHTML = this.template
     this.element = wrapper.firstElementChild
-    document.body.append(this.element)
+    document.body.querySelector('.notification-container').append(this.element)
   }
 
   get template() {
@@ -65,11 +65,6 @@ export default class Notification {
   close() {
     this.element.parentNode && this.element.remove()
   }
-
-  remove() {
-    this.close()
-    currentNotificationInstance = null
-  }
 }
 
 export class OnSuccess extends Notification {
@@ -88,10 +83,14 @@ export class OnError extends Notification {
   }
 }
 
-export function removeCurrentNotification() {
-  currentNotificationInstance &&
-    currentNotificationInstance.remove &&
-    currentNotificationInstance.remove()
+export function closeCurrentNotifications() {
+  currentNotificationInstances &&
+    currentNotificationInstances.length &&
+    currentNotificationInstances.forEach(notification => {
+      notification.close()
+    })
+
+  currentNotificationInstances = []
 }
 
 export function sendNotification() {}
