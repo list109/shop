@@ -35,4 +35,4 @@ Object.defineProperty(window.HTMLElement.prototype, 'trim', {
   }
 })
 
-Event.prototype.button = 1
+Event.prototype.button = 0
