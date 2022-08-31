@@ -47,7 +47,9 @@ export default class SortableTable {
         _end: this.end
       })
 
-      if (this.loadType !== 'onscroll') return
+      if (this.loadType !== 'onscroll') {
+        return
+      }
       this.loadType = null
 
       if (data === undefined) {
@@ -55,7 +57,9 @@ export default class SortableTable {
         return
       }
 
-      if (data.length < 1) this.isDataOnServer = false
+      if (data.length < 1) {
+        this.isDataOnServer = false
+      }
 
       this.append(data)
     }
@@ -145,7 +149,9 @@ export default class SortableTable {
 
     this.loadType = 'initial'
     const data = await this.loadData(this.url)
-    if (this.loadType === 'initial') this.loadType = null
+    if (this.loadType === 'initial') {
+      this.loadType = null
+    }
 
     this.renderRows(data)
     this.initEventListeners()
@@ -204,7 +210,9 @@ export default class SortableTable {
   }
 
   async update(externalParams = {}) {
-    if (this.loadType === 'update') return
+    if (this.loadType === 'update') {
+      return
+    }
     this.loadType = 'update'
 
     this.addRows([])
@@ -331,7 +339,9 @@ export default class SortableTable {
       _end: end
     })
 
-    if (this.loadType !== 'onsort') return
+    if (this.loadType !== 'onsort') {
+      return
+    }
     this.loadType = null
 
     this.renderRows(data)

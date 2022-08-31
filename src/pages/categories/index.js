@@ -124,7 +124,9 @@ export default class Categories {
 
   initEventListeners() {
     this.element.addEventListener('pointerdown', ({ target }) => {
-      target.closest('.category__header') && this.onHeaderClick(target)
+      if (target.closest('.category__header')) {
+        this.onHeaderClick(target)
+      }
     })
 
     this.element.addEventListener(

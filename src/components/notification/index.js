@@ -2,7 +2,9 @@ let currentNotificationInstances = []
 
 export default class Notification {
   onClose = ({ target }) => {
-    target.classList.contains('close') && this.close()
+    if (target.classList.contains('close')) {
+      this.close()
+    }
   }
 
   constructor({ message, status, timer }) {
@@ -63,7 +65,9 @@ export default class Notification {
   }
 
   close() {
-    this.element.parentNode && this.element.remove()
+    if (this.element.parentNode) {
+      this.element.remove()
+    }
   }
 }
 
@@ -84,11 +88,11 @@ export class OnError extends Notification {
 }
 
 export function closeCurrentNotifications() {
-  currentNotificationInstances &&
-    currentNotificationInstances.length &&
+  if (currentNotificationInstances && currentNotificationInstances.length) {
     currentNotificationInstances.forEach(notification => {
       notification.close()
     })
+  }
 
   currentNotificationInstances = []
 }

@@ -6,7 +6,9 @@ export default class RangeSlider {
   onPointerDown = ({ target, clientX }) => {
     const { elem: dataName } = target.dataset
 
-    if (this.currentThumb) return
+    if (this.currentThumb) {
+      return
+    }
 
     if (dataName.startsWith('thumb')) {
       this.currentThumb = target

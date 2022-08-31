@@ -72,7 +72,9 @@ export default class SortableList {
   }
 
   onPointerDown(event) {
-    if (this.draggingElem) return
+    if (this.draggingElem) {
+      return
+    }
 
     if (event.button !== 0) {
       // must be left-button
