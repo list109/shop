@@ -3,7 +3,7 @@ import { prepareForDom } from '../../utils/prepare-for-dom.js'
 import { server } from '../../mocks/server/server.js'
 import userEvent from '@testing-library/user-event'
 import SortableTable from './index.js'
-import header from '../../pages/table-header.js'
+import header from '../../components/sortable-table/patterns/products.js'
 
 const BACKEND_URL = `${HOST}api/dashboard/bestsellers`
 
@@ -31,12 +31,16 @@ const waitLoading = element => {
     if (element.classList.contains('sortable-table_loading') === false) {
       return true
     }
-    throw new Error('not loaded')
+    throw new Error(' not loaded')
   })
 }
 
 describe('SortableTable', () => {
   beforeAll(() => server.listen())
+
+  beforeEach(() => {
+    document.body.innerHTML = '<div class="notification-container"></div>'
+  })
 
   afterEach(() => server.resetHandlers())
 
@@ -259,7 +263,7 @@ describe('SortableTable', () => {
     await waitFor(() => {
       expect(container).not.toHaveClass('sortable-table_loading')
     })
-    expect(container).toHaveClass('sortable-table_empty')
+    expect(container).toHaveClass('sortable-table_error')
     expect(placeholder).toHaveTextContent(/No products/i)
 
     sortableTable.clear()
