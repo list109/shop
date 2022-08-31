@@ -33,7 +33,7 @@
     "no-unused-expressions": ["warn", { "allowTernary": true }],
     "no-shadow-restricted-names": "warn",
     "no-undefined": "off",
-    "camelcase": "warn",
+    "camelcase": ["warn", { "properties": "never" }],
 
     // "indent": [
     //   "warn",
