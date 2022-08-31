@@ -76,7 +76,7 @@ export default class ProductForm {
     fileInput.click()
   }
 
-  constructor(productId, { label }) {
+  constructor(productId, { label = '' } = {}) {
     this.productId = productId
     this.label = label
   }
