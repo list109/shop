@@ -101,6 +101,8 @@ export default class SortableTable {
   onProductClick = ({ target }) => {
     const row = target.closest('tr')
 
+    if (row.dataset.id.match(/^[0-9]*$/)) return
+
     if (row) {
       const link = document.createElement('a')
       link.href = `/products/${row.dataset.id}`
