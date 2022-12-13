@@ -103,10 +103,24 @@ export default class SortableTable {
 
     if (row.dataset.id.match(/^[0-9]*$/)) return
 
+    // if (row) {
+    //   const link = document.createElement('a')
+    //   link.href = `/products/${row.dataset.id}`
+    //   link.click()
+    // }
+
     if (row) {
+      const event = new MouseEvent('click', {
+        view: window,
+        bubbles: true,
+        cancelable: true
+      })
       const link = document.createElement('a')
       link.href = `/products/${row.dataset.id}`
-      link.click()
+      link.style.cssText = 'width: 0px; height: 0px; opacity: 0'
+      document.body.append(link)
+      link.dispatchEvent(event)
+      link.remove()
     }
   }
 
