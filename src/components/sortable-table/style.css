@@ -99,6 +99,10 @@
   cursor: pointer;
 }
 
+.sales .sortable-table__body .sortable-table__row:hover {
+  cursor: auto;
+}
+
 .sortable-table_empty,
 .sortable-table_error {
   display: flex;
