@@ -61,7 +61,7 @@ export default class Categories {
 
   get template() {
     return `
-    <div class="categories">
+    <div class="categories" data-page-label="categories">
       <div class="content__top-panel">
       <h1 class="page-title">Категории</h1>
       </div>  

@@ -30,7 +30,7 @@ export default class Page {
 
   get template() {
     return `
-    <div class="sales full-height flex-column">
+    <div class="sales full-height flex-column" data-page-label="sales">
       <div class="content__top-panel">
         <h1 class="page-title">Продажи</h1>
         <div data-elem="rangePicker"></div>

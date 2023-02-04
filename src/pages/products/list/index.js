@@ -40,7 +40,7 @@ export default class List {
 
   get template() {
     return `
-    <div class="products-list full-height flex-column">
+    <div class="products-list full-height flex-column" data-page-label="products">
       <div class="content__top-panel">
         <h2 class="page-title">Товары</h2>
         <a href="/products/add" class="button-primary">Добавить товар</a>
