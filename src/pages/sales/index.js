@@ -32,7 +32,7 @@ export default class Page {
     return `
     <div class="sales full-height flex-column">
       <div class="content__top-panel">
-        <h1 class="page-title">Sales</h1>
+        <h1 class="page-title">Продажи</h1>
         <div data-elem="rangePicker"></div>
       </div>
       <div data-elem="sortableTable" class="full-height flex-column"></div>

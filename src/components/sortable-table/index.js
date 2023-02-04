@@ -191,7 +191,7 @@ export default class SortableTable {
       data = await fetchJson(url)
     } catch (err) {
       new notifications.OnError(
-        `${this.label && `${this.label}: `}Could not load data: (${err.message})`
+        `${this.label && `${this.label}: `}Не удалось загрузить данные: (${err.message})`
       )
       return
     }
@@ -322,11 +322,11 @@ export default class SortableTable {
         <div data-elem="loading" class="loading-line sortable-table__loading-line"  role="progress"></div>
         
         <div data-elem="placeholder" class="sortable-table__empty-placeholder" data-testid="placeholder">
-          ${this.placeholder || '<p>No products</p>'}
+          ${this.placeholder || '<p>Нет товаров</p>'}
         </div>
 
         <div data-elem="errorMessage" class="sortable-table__error-message" data-testid="errorMessage">
-          <p>No data has been loaded</p>
+          <p>Данные не были загружены</p>
         </div>
       </div>`
   }

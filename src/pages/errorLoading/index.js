@@ -6,8 +6,8 @@ export default class {
 
     element.innerHTML = `
       <div class="error-loading">
-        <h1 class="page-title">Loading error</h1>
-        <p>Sorry, but the page could not be loaded</p>
+        <h1 class="page-title">Ошибка загрузки</h1>
+        <p>Извините, не удалось загрузить страницу</p>
       </div>
     `
 

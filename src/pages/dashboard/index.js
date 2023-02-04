@@ -1,7 +1,7 @@
 import RangePicker from '../../components/range-picker/index.js'
 import SortableTable from '../../components/sortable-table/index.js'
 import ColumnChart from '../../components/column-chart/index.js'
-import header from '../../components/sortable-table/patterns/products.js'
+import header from '../../components/sortable-table/patterns/sellers.js'
 
 export default class Page {
   element
@@ -47,21 +47,21 @@ export default class Page {
     const ordersChart = new ColumnChart({
       id: 'column-chart-orders',
       url: chartUrl.replace('name', 'orders'),
-      label: 'Total orders',
+      label: 'Заказы',
       link: '#'
     })
 
     const salesChart = new ColumnChart({
       id: 'column-chart-sales',
       url: chartUrl.replace('name', 'sales'),
-      label: 'Total sales',
+      label: 'Продажи',
       valuePrefix: '$'
     })
 
     const customersChart = new ColumnChart({
       id: 'column-chart-customers',
       url: chartUrl.replace('name', 'customers'),
-      label: 'Total customers'
+      label: 'Клиенты'
     })
 
     this.components.sortableTable = sortableTable
@@ -74,7 +74,7 @@ export default class Page {
   get template() {
     return `<div class="dashboard full-height flex-column" >
       <div class="content__top-panel">
-        <h2 class="page-title">Dashboard</h2>
+        <h2 class="page-title">Показатели</h2>
         <!-- RangePicker component -->
         <div data-elem="rangePicker"></div>
       </div>
@@ -85,7 +85,7 @@ export default class Page {
         <div data-elem="customersChart" class="dashboard__chart_customers"></div>
       </div>
 
-      <h3 class="block-title">Best sellers</h3>
+      <h3 class="block-title">Лучшие продажи</h3>
 
       <div class="dashboard_table" data-elem="sortableTable">
         <!-- sortable-table component -->

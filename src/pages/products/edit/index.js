@@ -4,6 +4,7 @@ export default class Edit {
   element
   subElements = {}
   components = {}
+  productId = location.pathname.split('/').slice(-1)[0]
 
   async render() {
     const element = document.createElement('div')
@@ -26,7 +27,9 @@ export default class Edit {
       <div class="products-edit">
         <div class="content__top-panel">
           <h1 class="page-title">
-            <a href="/products" class="link">Products</a> / Edit
+            <a href="/products" class="link">Список товаров</a> / ${
+              this.productId === 'add' ? 'Добавить товар' : 'Редактировать'
+            }
           </h1>
         </div>
         <div class="content-box full-height">
@@ -37,8 +40,7 @@ export default class Edit {
   }
 
   initComponents() {
-    const productId = location.pathname.split('/').slice(-1)[0]
-    const productForm = new ProductForm(productId === 'add' ? null : productId, {
+    const productForm = new ProductForm(this.productId === 'add' ? null : this.productId, {
       label: 'Product form'
     })
 

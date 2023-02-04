@@ -15,7 +15,7 @@ export default async function (path) {
     Page = page
   } catch (err) {
     Page = errorLoadingPage
-    new notifications.OnError(`Could not load the page (${err.message})`)
+    new notifications.OnError(`Не удалось загрузить страницу (${err.message})`)
   }
 
   const page = new Page()

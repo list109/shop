@@ -21,13 +21,13 @@ export default class List {
       end: 30,
       step: 30,
       placeholder: `<div>
-          <p>No products have been found to fit the assigned criterion</p>
+          <p>Не удалось найти товары по указанным параметрам</p>
           <button 
           class="button-primary-outline"
           type="button"
           onclick=
           "this.dispatchEvent(new CustomEvent('clear-filters', {bubbles: true}))">
-            Clear filters
+            Сбросить настройки
           </button>
         </div>`
     })
@@ -42,29 +42,29 @@ export default class List {
     return `
     <div class="products-list full-height flex-column">
       <div class="content__top-panel">
-        <h2 class="page-title">Products</h2>
-        <a href="/products/add" class="button-primary">Add a product</a>
+        <h2 class="page-title">Товары</h2>
+        <a href="/products/add" class="button-primary">Добавить товар</a>
       </div>
       <div class="content-box content-box_small">
 
         <form class="form-inline">
 
           <div class="form-group">
-            <label class="form-label">Sort by:</label>
-            <input data-elem="filterName" type="text" class="form-control" placeholder="Product's name" />
+            <label class="form-label">Сортировать по:</label>
+            <input data-elem="filterName" type="text" class="form-control" placeholder="Название товара" />
           </div>
           
           <div data-elem="rangeSlider" class="form-group">
-            <label class="form-label">Price:</label>
+            <label class="form-label">Цена:</label>
             <!-- range-slider component -->
           </div>
 
           <div class="form-group">
-            <label class="form-label">Status:</label>
+            <label class="form-label">Статус:</label>
             <select data-elem="filterStatus" class="form-control">
-              <option value selected>Anything</option>
-              <option value="1">Active</option>
-              <option value="0">Inactive</option>
+              <option value selected>Любой</option>
+              <option value="1">Активный</option>
+              <option value="0">Неактивный</option>
             </select>
           </div>
         

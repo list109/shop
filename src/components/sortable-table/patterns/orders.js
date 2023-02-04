@@ -6,21 +6,21 @@ const header = [
   },
   {
     id: 'user',
-    title: 'Client',
+    title: 'Клиент',
     sortable: true
   },
   {
     id: 'createdAt',
-    title: 'Date',
+    title: 'Дата',
     sortable: true,
     template: data => `
       <td class="sortable-table__cell">
-        ${new Date(data).toLocaleString('en', { dateStyle: 'medium' })}
+        ${new Date(data).toLocaleString('ru', { dateStyle: 'medium' })}
       </td>`
   },
   {
     id: 'totalCost',
-    title: 'Cost',
+    title: 'Стоимость',
     sortable: true,
     template: data => `
       <td class="sortable-table__cell">
@@ -29,7 +29,7 @@ const header = [
   },
   {
     id: 'delivery',
-    title: 'Status',
+    title: 'Статус',
     sortable: true
   }
 ]

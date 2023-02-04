@@ -22,11 +22,11 @@ export default class Categories {
         body: JSON.stringify(body)
       })
     } catch (err) {
-      new notifications.OnError(`Could not send data (${err.message})`)
+      new notifications.OnError(`Не удалось отправить данные (${err.message})`)
       return
     }
 
-    new notifications.OnSuccess('Category order saved')
+    new notifications.OnSuccess('Расположение изменено')
   }
 
   async render() {
@@ -53,7 +53,7 @@ export default class Categories {
         `${process.env.BACKEND_URL}api/rest/categories?_sort=weight&_refs=subcategory`
       )
     } catch (err) {
-      new notifications.OnError(`Categories page: Could not load data (${err.message})`)
+      new notifications.OnError(`Страница категорий: Не удалось загрузить данные (${err.message})`)
     }
 
     return categories
@@ -63,7 +63,7 @@ export default class Categories {
     return `
     <div class="categories">
       <div class="content__top-panel">
-      <h1 class="page-title">Categories</h1>
+      <h1 class="page-title">Категории</h1>
       </div>  
       ${this.data ? this.getBodyTemplate() : this.getErrorTemplate()}
     </div>`
@@ -71,13 +71,13 @@ export default class Categories {
 
   getBodyTemplate() {
     return `
-      <p>Subcategories can be dragged to change their order within the category.</p>
+      <p>Подкатегории можно перетаскивать, меняя их порядок внутри своей категории.</p>
       <div data-elem="categoriesContainer">${this.getCategories(this.data)}</div>
     `
   }
 
   getErrorTemplate() {
-    return '<p>Could not load data</p>'
+    return '<p>Возникла ошибка при загрузке данных</p>'
   }
 
   getCategories(categories) {

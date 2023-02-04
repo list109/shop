@@ -52,14 +52,14 @@ export default class ProductForm {
             body: formData
           })
         } catch (err) {
-          new notifications.OnError(`Could not upload (${err.message})`)
+          new notifications.OnError(`Ошибка при загрузке (${err.message})`)
         }
 
         if (result && result.data) {
           imageListContainer.firstElementChild.append(
             this.getImageItem(result.data.link, file.name)
           )
-          new notifications.OnSuccess('Uploaded')
+          new notifications.OnSuccess('Загружено')
         }
 
         uploadImage.classList.remove('is-loading')
@@ -88,7 +88,7 @@ export default class ProductForm {
       <form role="form" data-elem="productForm" class="form-grid">
         <div class="form-group form-group__half_left">
           <fieldset>
-            <label class="form-label" for="title">Product's name</label>
+            <label class="form-label" for="title">Название товара</label>
             <p class="required">
               <input required
                 id="title"
@@ -96,42 +96,42 @@ export default class ProductForm {
                 type="text"
                 name="title"
                 class="form-control"
-                placeholder="Product's name"
+                placeholder="Название товара"
                 data-testid="title">
             </p>
           </fieldset>
         </div>
 
         <div class="form-group form-group__wide">
-          <label class="form-label" for="description">Description</label>
+          <label class="form-label" for="description">Описание товара</label>
           <p class="required">
             <textarea required
               id="description"
               class="form-control"
               name="description"
-              placeholder="Product's description"
+              placeholder="Описание товара"
               data-testid="description"></textarea>
           </p>
         </div>
 
         <div class="form-group form-group__wide">
-          <label class="form-label">Photo</label>
+          <label class="form-label">Фото</label>
 
           <div data-elem="imageListContainer"></div>
 
           <button data-elem="uploadImage" type="button" class="button-primary-outline">
-            <span>Upload</span>
+            <span>Загрузить изображение</span>
           </button>
         </div>
 
         <div class="form-group form-group__half_left">
-          <label class="form-label" for="subcategory">Category</label>
+          <label class="form-label" for="subcategory">Категория</label>
             ${this.createCategoriesSelect()}
         </div>
 
         <div class="form-group form-group__half_left form-group__two-col">
           <fieldset>
-            <label class="form-label" for="price">Price ($)</label>
+            <label class="form-label" for="price">Цена ($)</label>
             <p class="required">
               <input required
                 id="price"
@@ -144,7 +144,7 @@ export default class ProductForm {
             </p>
           </fieldset>
           <fieldset>
-            <label class="form-label" for="discount">Discount ($)</label>
+            <label class="form-label" for="discount">Скидка ($)</label>
             <p class="required">
               <input required
                 id="discount"
@@ -159,7 +159,7 @@ export default class ProductForm {
         </div>
 
         <div class="form-group form-group__part-half">
-          <label class="form-label" for="quantity">Quantity</label>
+          <label class="form-label" for="quantity">Количество</label>
           <p class="required">
             <input required
               id="quantity"
@@ -173,17 +173,17 @@ export default class ProductForm {
         </div>
 
         <div class="form-group form-group__part-half">
-          <label class="form-label" for="status">Status</label>
+          <label class="form-label" for="status">Статус</label>
           
             <select id="status" class="form-control" name="status" data-testid="status">
-              <option value="1">Active</option>
-              <option value="0">Unactive</option>
+              <option value="1">Активен</option>
+              <option value="0">Неактивен</option>
             </select>
         </div>
 
         <div class="form-buttons">
           <button type="submit" name="save" class="button-primary-outline">
-            ${this.productId ? 'Save' : 'Add'} the product
+            ${this.productId ? 'Сохранить' : 'Добавить'} товар
           </button>
         </div>
       </form>
@@ -230,8 +230,8 @@ export default class ProductForm {
       ;[...data] = await Promise.all([categoriesPromise, productPromise])
     } catch (err) {
       new notifications.OnError(
-        `${this.label ? `${this.label}: ` : ''}Could not load${
-          this.productId ? ` the product's data (${err.message})` : 'data'
+        `${this.label ? `${this.label}: ` : ''}Не удалось загрузить${
+          this.productId ? ` данные товара (${err.message})` : 'данные'
         }`
       )
     }
@@ -250,13 +250,13 @@ export default class ProductForm {
 
   renderError() {
     this.element = document.createElement('div')
-    this.element.innerHTML = `<p>Could not load data</p>`
+    this.element.innerHTML = `<p>Не удалось загрузить данные</p>`
   }
 
   getEmptyTemplate() {
     return `<div>
-      <h1 class="page-title">Product has not been found</h1>
-      <p>Sorry, but it seems the given product does not exist</p>
+      <h1 class="page-title">Товар не был найден</h1>
+      <p>Извините, но кажеться указанный продукт не существует</p>
     </div>`
   }
 
@@ -274,11 +274,11 @@ export default class ProductForm {
         body: JSON.stringify(product)
       })
     } catch (err) {
-      new notifications.OnError(`Could not save (${err.message})`)
+      new notifications.OnError(`Не удалось сохранить (${err.message})`)
       return
     }
 
-    new notifications.OnSuccess('Saved')
+    new notifications.OnSuccess('Сохранено')
 
     this.dispatchEvent(result.id)
   }

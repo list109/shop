@@ -8,7 +8,7 @@ export default class RangePicker {
   }
 
   static formatDate(date) {
-    return date.toLocaleString('en-UK', { dateStyle: 'short' })
+    return date.toLocaleString('ru', { dateStyle: 'short' })
   }
 
   onDocumentClick = event => {
@@ -208,7 +208,7 @@ export default class RangePicker {
     date.setDate(1)
 
     // text-transform: capitalize
-    const monthStr = date.toLocaleString('en-UK', { month: 'long' })
+    const monthStr = date.toLocaleString('ru-RU', { month: 'long' })
 
     let table = `
     <div class="rangepicker__calendar" 
@@ -223,13 +223,13 @@ export default class RangePicker {
       </div>
 
       <div class="rangepicker__day-of-week" role="row">
-        <div role="columnheader">Mon</div>
-        <div role="columnheader">Tue</div>
-        <div role="columnheader">Wed</div>
-        <div role="columnheader">Thur</div>
-        <div role="columnheader">Fri</div>
-        <div role="columnheader">Sat</div>
-        <div role="columnheader">Sun</div>
+        <div role="columnheader">Пн</div>
+        <div role="columnheader">Вт</div>
+        <div role="columnheader">Ср</div>
+        <div role="columnheader">Чт</div>
+        <div role="columnheader">Пт</div>
+        <div role="columnheader">Сб</div>
+        <div role="columnheader">Вс</div>
       </div>
       <div class="rangepicker__date-grid" role="row">
     `

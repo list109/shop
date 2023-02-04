@@ -96,7 +96,7 @@ export default class ColumnChart {
   }
 
   getLink() {
-    return this.link ? `<a class="column-chart__link" href="${this.link}">View all</a>` : ''
+    return this.link ? `<a class="column-chart__link" href="${this.link}">Подробнее</a>` : ''
   }
 
   get template() {
